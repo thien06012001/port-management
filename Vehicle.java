@@ -1,126 +1,87 @@
+package portManagement;
+
+import java.util.List;
+import java.util.ArrayList;
+
 public class Vehicle {
     private String id;
     private String name;
-    private long currentFuel;
-    private long carryingCapacity;
-    private long fuelCapacity;
+    private String type; // Ship/Truck
+    private double currentFuel;
+    private double carryingCapacity;
+    private double fuelCapacity;
     private Port currentPort;
-    private int totalContainers;
-    private int dryStorageContainers;
-    private int openTopContainers;
-    private int openSideContainers;
-    private int refrigeratedContainers;
-    private int liquidContainers;
-    private VehicleType type;
+    private List<Container> containersList;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
+    // Constructor
+    public Vehicle(String id, String name, String type, double fuelCapacity, double carryingCapacity) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
         this.name = name;
-    }
-
-    public long getCurrentFuel() {
-        return currentFuel;
-    }
-
-    public void setCurrentFuel(long currentFuel) {
-        this.currentFuel = currentFuel;
-    }
-
-    public long getCarryingCapacity() {
-        return carryingCapacity;
-    }
-
-    public void setCarryingCapacity(long carryingCapacity) {
-        this.carryingCapacity = carryingCapacity;
-    }
-
-    public long getFuelCapacity() {
-        return fuelCapacity;
-    }
-
-    public void setFuelCapacity(long fuelCapacity) {
+        this.type = type;
         this.fuelCapacity = fuelCapacity;
+        this.carryingCapacity = carryingCapacity;
+        this.currentFuel = fuelCapacity; // Assuming vehicle starts fully fueled
+        this.containersList = new ArrayList<>();
     }
 
+    // Load a container onto the vehicle
+    public void loadContainer(Container container) {
+        if (container.weight + getTotalWeight() <= carryingCapacity) {
+            containersList.add(container);
+        } else {
+            System.out.println("Too much weight to load this container!");
+        }
+    }
+
+    // Unload a container from the vehicle
+    public void unloadContainer(Container container) {
+        containersList.remove(container);
+    }
+
+    // Move the vehicle to a specified port
+    public void moveToPort(Port destinationPort) {
+        double distance = currentPort.calculateDistanceTo(destinationPort);
+        double requiredFuel = 0;
+        for (Container c : containersList) {
+            if (type.equals("Ship")) {
+                requiredFuel += c.getFuelConsumptionForShip() * distance;
+            } else if (type.equals("Truck")) {
+                requiredFuel += c.getFuelConsumptionForTruck() * distance;
+            }
+        }
+        if (currentFuel >= requiredFuel) {
+            currentFuel -= requiredFuel;
+            currentPort = destinationPort;
+        } else {
+            System.out.println("Not enough fuel to move to the destination!");
+        }
+    }
+
+    // Refuel the vehicle
+    public void refuel(double amount) {
+        if (currentFuel + amount <= fuelCapacity) {
+            currentFuel += amount;
+        } else {
+            System.out.println("Fuel capacity exceeded! Filling up to maximum capacity.");
+            currentFuel = fuelCapacity;
+        }
+    }
+
+    // Calculate the total weight of containers on the vehicle
+    public double getTotalWeight() {
+        double totalWeight = 0;
+        for (Container c : containersList) {
+            totalWeight += c.weight;
+        }
+        return totalWeight;
+    }
+
+    // Add these methods
     public Port getCurrentPort() {
         return currentPort;
     }
 
-    public void setCurrentPort(Port currentPort) {
-        this.currentPort = currentPort;
+    public void setCurrentPort(Port port) {
+        this.currentPort = port;
     }
-
-    public int getTotalContainers() {
-        return totalContainers;
-    }
-
-    public void setTotalContainers(int totalContainers) {
-        this.totalContainers = totalContainers;
-    }
-
-    public int getDryStorageContainers() {
-        return dryStorageContainers;
-    }
-
-    public void setDryStorageContainers(int dryStorageContainers) {
-        this.dryStorageContainers = dryStorageContainers;
-    }
-
-    public int getOpenTopContainers() {
-        return openTopContainers;
-    }
-
-    public void setOpenTopContainers(int openTopContainers) {
-        this.openTopContainers = openTopContainers;
-    }
-
-    public int getOpenSideContainers() {
-        return openSideContainers;
-    }
-
-    public void setOpenSideContainers(int openSideContainers) {
-        this.openSideContainers = openSideContainers;
-    }
-
-    public int getRefrigeratedContainers() {
-        return refrigeratedContainers;
-    }
-
-    public void setRefrigeratedContainers(int refrigeratedContainers) {
-        this.refrigeratedContainers = refrigeratedContainers;
-    }
-
-    public int getLiquidContainers() {
-        return liquidContainers;
-    }
-
-    public void setLiquidContainers(int liquidContainers) {
-        this.liquidContainers = liquidContainers;
-    }
-
-    public VehicleType getType() {
-        return type;
-    }
-
-    public void setType(VehicleType type) {
-        this.type = type;
-    }
-}
-
-enum VehicleType {
-    SHIP,
-    TRUCK,
-    REEFER_TRUCK,
-    TANKER_TRUCK
 }
