@@ -1,3 +1,6 @@
+package portManagement;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Port {
@@ -5,100 +8,88 @@ public class Port {
     private String name;
     private double latitude;
     private double longitude;
-    private long storingCapacity;
+    private double storingCapacity;
     private boolean landingAbility;
-    private long totalWeightContainers;
-    private int numberContainers;
-    private int numberVehicles;
-    private List<Trip> trafficHistory;
-    private User manager;
+    private List<Container> containersList = new ArrayList<>();
+    private List<Vehicle> vehiclesList = new ArrayList<>();
+    private List<Trip> trafficHistory = new ArrayList<>();
+
+    // Constructor
+    public Port(String id, String name, double latitude, double longitude, double storingCapacity, boolean landingAbility) {
+        this.id = id;
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.storingCapacity = storingCapacity;
+        this.landingAbility = landingAbility;
+    }
+
+    // Calculate distance to another port using the Haversine formula
+    public double calculateDistanceTo(Port otherPort) {
+        final int R = 6371; // Radius of the Earth in kilometers
+        double latDistance = Math.toRadians(otherPort.latitude - this.latitude);
+        double lonDistance = Math.toRadians(otherPort.longitude - this.longitude);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(this.latitude)) * Math.cos(Math.toRadians(otherPort.latitude))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    }
+
+    // Add a vehicle to the port
+    public void addVehicle(Vehicle vehicle) {
+        vehiclesList.add(vehicle);
+        vehicle.setCurrentPort(this);
+    }
+
+    // Remove a vehicle from the port
+    public void removeVehicle(Vehicle vehicle) {
+        vehiclesList.remove(vehicle);
+        vehicle.setCurrentPort(null);
+    }
+
+    // Add a container to the port
+    public void addContainer(Container container) {
+        if (getTotalWeight() + container.weight <= storingCapacity) {
+            containersList.add(container);
+        } else {
+            System.out.println("Port capacity exceeded!");
+        }
+    }
+
+    // Remove a container from the port
+    public void removeContainer(Container container) {
+        containersList.remove(container);
+    }
+
+    // Calculate the total weight of all containers in the port
+    public double getTotalWeight() {
+        double totalWeight = 0;
+        for (Container c : containersList) {
+            totalWeight += c.weight;
+        }
+        return totalWeight;
+    }
+
+    // Getters and setters for relevant attributes
 
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public List<Vehicle> getVehiclesList() {
+        return vehiclesList;
     }
 
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public long getStoringCapacity() {
-        return storingCapacity;
-    }
-
-    public void setStoringCapacity(long storingCapacity) {
-        this.storingCapacity = storingCapacity;
-    }
-
-    public boolean hasLandingAbility() {
-        return landingAbility;
-    }
-
-    public void setLandingAbility(boolean landingAbility) {
-        this.landingAbility = landingAbility;
-    }
-
-    public long getTotalWeightContainers() {
-        return totalWeightContainers;
-    }
-
-    public void setTotalWeightContainers(long totalWeightContainers) {
-        this.totalWeightContainers = totalWeightContainers;
-    }
-
-    public int getNumberContainers() {
-        return numberContainers;
-    }
-
-    public void setNumberContainers(int numberContainers) {
-        this.numberContainers = numberContainers;
-    }
-
-    public int getNumberVehicles() {
-        return numberVehicles;
-    }
-
-    public void setNumberVehicles(int numberVehicles) {
-        this.numberVehicles = numberVehicles;
+    public List<Container> getContainersList() {
+        return containersList;
     }
 
     public List<Trip> getTrafficHistory() {
         return trafficHistory;
     }
-
-    public void setTrafficHistory(List<Trip> trafficHistory) {
-        this.trafficHistory = trafficHistory;
-    }
-
-    public User getManager() {
-        return manager;
-    }
-
-    public void setManager(User manager) {
-        this.manager = manager;
-    }
-
 }
