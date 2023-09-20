@@ -1,9 +1,8 @@
-package portManagement;
 
-class Container {
-    String id;
-    double weight;
-    String type; // DryStorage/OpenTop/OpenSide/Refrigerated/Liquid
+public class Container {
+    private String id;
+    protected double weight;
+    protected String type; // DryStorage/OpenTop/OpenSide/Refrigerated/Liquid
 
     public Container(String id, double weight, String type) {
         this.id = id;
