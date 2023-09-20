@@ -1,9 +1,8 @@
-package portManagement;
 
 public class Ship extends Vehicle {
 
     public Ship(String id, String name, double fuelCapacity, double carryingCapacity, double currentFuel) {
-        super(id, name, "Ship", fuelCapacity, carryingCapacity, currentFuel );
+        super(id, name, "Ship", fuelCapacity, carryingCapacity, currentFuel);
     }
 
     @Override

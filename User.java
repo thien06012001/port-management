@@ -1,4 +1,3 @@
-package portManagement;
 
 public class User {
     private String username;

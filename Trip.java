@@ -1,4 +1,3 @@
-package portManagement;
 
 import java.util.Date;
 
@@ -11,7 +10,8 @@ public class Trip {
     private String status; // Status might not need direct modification in subclasses
 
     // Constructor
-    public Trip(Vehicle vehicle, Port departurePort, Port arrivalPort, Date departureDate, Date arrivalDate, String status) {
+    public Trip(Vehicle vehicle, Port departurePort, Port arrivalPort, Date departureDate, Date arrivalDate,
+            String status) {
         this.vehicle = vehicle;
         this.departurePort = departurePort;
         this.arrivalPort = arrivalPort;

@@ -1,4 +1,3 @@
-package portManagement;
 
 import java.util.ArrayList;
 
@@ -13,7 +12,8 @@ public abstract class Vehicle implements IVehicle {
     private ArrayList<Container> containersList;
 
     // Constructor
-    public Vehicle(String id, String name, String type, double fuelCapacity, double carryingCapacity, double currentFuel) {
+    public Vehicle(String id, String name, String type, double fuelCapacity, double carryingCapacity,
+            double currentFuel) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -31,7 +31,6 @@ public abstract class Vehicle implements IVehicle {
     public ArrayList<Container> getContainersList() {
         return containersList;
     }
-
 
     // Abstract method to load a container onto the vehicle
     public abstract void loadContainer(Container container);

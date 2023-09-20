@@ -1,9 +1,8 @@
-package portManagement;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Port implements IPort{
+public class Port implements IPort {
     private String id;
     private String name;
     private double latitude;
@@ -15,7 +14,8 @@ public class Port implements IPort{
     private ArrayList<Trip> trafficHistory = new ArrayList<>();
 
     // Constructor
-    public Port(String id, String name, double latitude, double longitude, double storingCapacity, boolean landingAbility) {
+    public Port(String id, String name, double latitude, double longitude, double storingCapacity,
+            boolean landingAbility) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;
@@ -32,7 +32,7 @@ public class Port implements IPort{
         double lonDistance = Math.toRadians(otherPort.longitude - this.longitude);
         double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
                 + Math.cos(Math.toRadians(this.latitude)) * Math.cos(Math.toRadians(otherPort.latitude))
-                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+                        * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c;
     }

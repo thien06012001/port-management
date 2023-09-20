@@ -1,9 +1,9 @@
-package portManagement;
 
 class Truck extends Vehicle {
     private String truckType; // Basic/Reefer/Tanker
 
-    public Truck(String id, String name, double fuelCapacity, double carryingCapacity, double currentFuel, String truckType) {
+    public Truck(String id, String name, double fuelCapacity, double carryingCapacity, double currentFuel,
+            String truckType) {
         super(id, name, "Truck", fuelCapacity, carryingCapacity, currentFuel);
         this.truckType = truckType;
     }
@@ -14,7 +14,8 @@ class Truck extends Vehicle {
 
         switch (truckType) {
             case "Basic":
-                if (container.type.equals("DryStorage") || container.type.equals("OpenTop") || container.type.equals("OpenSide")) {
+                if (container.type.equals("DryStorage") || container.type.equals("OpenTop")
+                        || container.type.equals("OpenSide")) {
                     canLoad = true;
                 } else {
                     System.out.println("Basic truck can't carry this container type: " + container.type);
