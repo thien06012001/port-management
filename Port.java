@@ -1,18 +1,18 @@
 package portManagement;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
-public class Port {
+public class Port implements IPort{
     private String id;
     private String name;
     private double latitude;
     private double longitude;
     private double storingCapacity;
     private boolean landingAbility;
-    private List<Container> containersList = new ArrayList<>();
-    private List<Vehicle> vehiclesList = new ArrayList<>();
-    private List<Trip> trafficHistory = new ArrayList<>();
+    private ArrayList<Container> containersList = new ArrayList<>();
+    private ArrayList<Vehicle> vehiclesList = new ArrayList<>();
+    private ArrayList<Trip> trafficHistory = new ArrayList<>();
 
     // Constructor
     public Port(String id, String name, double latitude, double longitude, double storingCapacity, boolean landingAbility) {
@@ -27,6 +27,7 @@ public class Port {
     // Calculate distance to another port using the Haversine formula
     public double calculateDistanceTo(Port otherPort) {
         final int R = 6371; // Radius of the Earth in kilometers
+
         double latDistance = Math.toRadians(otherPort.latitude - this.latitude);
         double lonDistance = Math.toRadians(otherPort.longitude - this.longitude);
         double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
@@ -38,14 +39,20 @@ public class Port {
 
     // Add a vehicle to the port
     public void addVehicle(Vehicle vehicle) {
+        if (vehicle instanceof Truck && !landingAbility) {
+            System.out.println("This port is not marked as landing. Trucks cannot be added.");
+            return;
+        }
         vehiclesList.add(vehicle);
         vehicle.setCurrentPort(this);
     }
 
     // Remove a vehicle from the port
     public void removeVehicle(Vehicle vehicle) {
-        vehiclesList.remove(vehicle);
-        vehicle.setCurrentPort(null);
+        if (vehiclesList.contains(vehicle)) {
+            vehiclesList.remove(vehicle);
+            vehicle.setCurrentPort(null);
+        }
     }
 
     // Add a container to the port
@@ -62,6 +69,11 @@ public class Port {
         containersList.remove(container);
     }
 
+    // Add a trip to the traffic history
+    public void addTrip(Trip trip) {
+        trafficHistory.add(trip);
+    }
+
     // Calculate the total weight of all containers in the port
     public double getTotalWeight() {
         double totalWeight = 0;
@@ -71,8 +83,7 @@ public class Port {
         return totalWeight;
     }
 
-    // Getters and setters for relevant attributes
-
+    // Getters for relevant attributes
     public String getId() {
         return id;
     }
@@ -81,15 +92,15 @@ public class Port {
         return name;
     }
 
-    public List<Vehicle> getVehiclesList() {
-        return vehiclesList;
+    public ArrayList<Vehicle> getVehiclesList() {
+        return new ArrayList<>(vehiclesList);
     }
 
-    public List<Container> getContainersList() {
-        return containersList;
+    public ArrayList<Container> getContainersList() {
+        return new ArrayList<>(containersList);
     }
 
-    public List<Trip> getTrafficHistory() {
-        return trafficHistory;
+    public ArrayList<Trip> getTrafficHistory() {
+        return new ArrayList<>(trafficHistory);
     }
 }

@@ -3,45 +3,24 @@ package portManagement;
 import java.util.Date;
 
 public class Trip {
-    private Vehicle vehicle;
-    private Date departureDate;
-    private Date arrivalDate;
-    private Port departurePort;
-    private Port arrivalPort;
-    private String status; // e.g. "Departed", "Arrived", "In Transit"
+    protected Vehicle vehicle; // Might be accessed by subclasses for specific vehicle-related operations
+    protected Port departurePort; // Important for calculating distances, costs, etc.
+    protected Port arrivalPort; // Same reason as departurePort
+    protected Date departureDate; // Could be used for scheduling or logging purposes in subclasses
+    protected Date arrivalDate; // Same reason as departureDate
+    private String status; // Status might not need direct modification in subclasses
 
     // Constructor
-    public Trip(Vehicle vehicle, Date departureDate, Port departurePort, Port arrivalPort) {
+    public Trip(Vehicle vehicle, Port departurePort, Port arrivalPort, Date departureDate, Date arrivalDate, String status) {
         this.vehicle = vehicle;
-        this.departureDate = departureDate;
         this.departurePort = departurePort;
         this.arrivalPort = arrivalPort;
-        this.status = "Scheduled"; // Default status when a trip is created
+        this.departureDate = departureDate;
+        this.arrivalDate = arrivalDate;
+        this.status = status;
     }
 
-    // Update the status of the trip
-    public void updateStatus(String newStatus) {
-        this.status = newStatus;
-    }
-
-    // Getters and setters for relevant attributes
-
-    public Vehicle getVehicle() {
-        return vehicle;
-    }
-
-    public Date getDepartureDate() {
-        return departureDate;
-    }
-
-    public Port getDeparturePort() {
-        return departurePort;
-    }
-
-    public Port getArrivalPort() {
-        return arrivalPort;
-    }
-
+    // Getter and Setter for status, as it's private
     public String getStatus() {
         return status;
     }
