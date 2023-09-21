@@ -1,8 +1,33 @@
+package model.container;
 
 public class Container {
-    private String id;
-    protected double weight;
-    protected String type; // DryStorage/OpenTop/OpenSide/Refrigerated/Liquid
+    String id;
+    private double weight;
+    String type; // DryStorage/OpenTop/OpenSide/Refrigerated/Liquid
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public Container(String id, double weight, String type) {
         this.id = id;
