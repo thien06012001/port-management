@@ -1,5 +1,8 @@
+package model.user;
 
-public class User {
+import model.port.Port;
+
+public abstract class User {
     private String username;
     private String password;
     private String role; // e.g. "Admin", "PortManager"

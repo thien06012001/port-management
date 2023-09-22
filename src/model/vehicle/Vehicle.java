@@ -1,7 +1,14 @@
+package model.vehicle;
 
+
+
+import model.container.Container;
+import model.port.Port;
+
+import java.util.List;
 import java.util.ArrayList;
 
-public abstract class Vehicle implements IVehicle {
+public class Vehicle {
     private String id;
     private String name;
     private String type; // Ship/Truck
@@ -9,31 +16,27 @@ public abstract class Vehicle implements IVehicle {
     private double carryingCapacity;
     private double fuelCapacity;
     private Port currentPort;
-    private ArrayList<Container> containersList;
+    private List<Container> containersList;
 
     // Constructor
-    public Vehicle(String id, String name, String type, double fuelCapacity, double carryingCapacity,
-            double currentFuel) {
+    public Vehicle(String id, String name, String type, double fuelCapacity, double carryingCapacity) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.fuelCapacity = fuelCapacity;
         this.carryingCapacity = carryingCapacity;
-        this.currentFuel = currentFuel; // Assuming vehicle starts fully fueled
+        this.currentFuel = fuelCapacity; // Assuming vehicle starts fully fueled
         this.containersList = new ArrayList<>();
     }
 
-    // Getter methods
-    public double getCarryingCapacity() {
-        return carryingCapacity;
+    // Load a container onto the vehicle
+    public void loadContainer(Container container) {
+        if (container.weight + getTotalWeight() <= carryingCapacity) {
+            containersList.add(container);
+        } else {
+            System.out.println("Too much weight to load this container!");
+        }
     }
-
-    public ArrayList<Container> getContainersList() {
-        return containersList;
-    }
-
-    // Abstract method to load a container onto the vehicle
-    public abstract void loadContainer(Container container);
 
     // Unload a container from the vehicle
     public void unloadContainer(Container container) {
@@ -46,13 +49,13 @@ public abstract class Vehicle implements IVehicle {
         double requiredFuel = 0;
         for (Container c : containersList) {
             if (type.equals("Ship")) {
-                requiredFuel = requiredFuel + c.getFuelConsumptionForShip() * distance;
+                requiredFuel += c.getFuelConsumptionForShip() * distance;
             } else if (type.equals("Truck")) {
-                requiredFuel = requiredFuel + c.getFuelConsumptionForTruck() * distance;
+                requiredFuel += c.getFuelConsumptionForTruck() * distance;
             }
         }
         if (currentFuel >= requiredFuel) {
-            currentFuel = currentFuel - requiredFuel;
+            currentFuel -= requiredFuel;
             currentPort = destinationPort;
         } else {
             System.out.println("Not enough fuel to move to the destination!");
@@ -78,12 +81,13 @@ public abstract class Vehicle implements IVehicle {
         return totalWeight;
     }
 
-    // For refactor currentPort variable every time moving to another port
-    public void setCurrentPort(Port port) {
-        this.currentPort = port;
-    }
-
+    // Add these methods
     public Port getCurrentPort() {
         return currentPort;
     }
+
+    public void setCurrentPort(Port port) {
+        this.currentPort = port;
+    }
 }
+
