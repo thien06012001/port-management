@@ -1,0 +1,34 @@
+# Container File
+# Format: ContainerID, Weight, Type, Status, LocationID (Vehicle/Port)
+c-001, 1000.0, DryStorage, Loaded, sh-001
+c-002, 1100.0, OpenTop, OnWait, p-00003
+c-003, 1200.0, OpenSide, Loaded, sh-002
+c-004, 1300.0, Refrigerated, OnWait, p-00004
+c-005, 1400.0, Liquid, Loaded, sh-003
+c-006, 1500.0, DryStorage, OnWait, p.00005
+c-007, 1600.0, OpenTop, Loaded, sh-004
+c-008, 1700.0, OpenSide, Loaded, sh-005
+c-009, 1800.0, Refrigerated, OnWait, p-00009
+c-010, 1900.0, Liquid, Loaded, sh-006
+c-011, 2000.0, DryStorage, OnWait, p-00008
+c-012, 2100.0, OpenTop, Loaded, sh-007
+c-013, 2200.0, OpenSide, OnWait, p-00007
+c-014, 2300.0, Refrigerated, Loaded, tr-005
+c-015, 2400.0, Liquid, OnWait, p-00002
+c-016, 2500.0, DryStorage, Loaded, tr-007
+c-017, 2600.0, OpenTop, Loaded, tr-001
+c-018, 2700.0, OpenSide, OnWait, p-00010
+c-019, 2800.0, Refrigerated, OnWait, p-00003
+c-020, 2900.0, Liquid, Loaded, tr-003
+c-021, 3000.0, DryStorage, Loaded, tr-003
+c-022, 3100.0, OpenTop, OnWait, p-00005
+c-023, 3200.0, OpenSide, OnWait, p-00001
+c-024, 3300.0, Refrigerated, Loaded, tr-008
+c-025, 3400.0, Liquid, Loaded, tr-006
+c-026, 3500.0, DryStorage, OnWait, p-00002
+c-027, 3600.0, OpenTop, Loaded, tr-004
+c-028, 3700.0, OpenSide, OnWait, p-00001
+c-029, 3800.0, Refrigerated, OnWait, p-00007
+c-030, 3900.0, Liquid, Loaded, tr-009
+
+c-031, 4000.0, Liquid, OnWait, p-00005
