@@ -14,6 +14,7 @@ public abstract class Vehicle implements IVehicle {
     private String name;
     private String type; // Ship/Truck
     private double currentFuel;
+    private double capacity;
     private double carryingCapacity;
     private double fuelCapacity;
     private Port currentPort;
@@ -33,6 +34,10 @@ public abstract class Vehicle implements IVehicle {
 
     public String getCurrentPortId() {
         return currentPortId;
+    }
+
+    public void setCurrentPortId(String id){
+        this.currentPortId = id;
     }
 
     // Getter methods
@@ -83,6 +88,8 @@ public abstract class Vehicle implements IVehicle {
             }
         }
         if ((requiredFuel < distance) && (currentFuel >= requiredFuel)) {
+            currentFuel = currentFuel - requiredFuel;
+            currentPort = destinationPort;
             return true; 
         }
         return false;

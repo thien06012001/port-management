@@ -1,6 +1,7 @@
 package controller;
 
-import views.CRUDView.PortCRUDView;
+import views.CRUDView.*;
+
 
 public class AdminController {
     public static void managePort() {
@@ -9,15 +10,9 @@ public class AdminController {
 }
 
     public static void manageContainer() {
-    System.out.println("============= Containers =============");
-    System.out.println("1. View all containers");
-    System.out.println("2. Add a new container");
-    System.out.println("3. Remove a container");
-    System.out.println("4. Update container information");
-    System.out.println("5. List all containers in a port");
-    System.out.println("6. Check if a container can be loaded onto a vehicle");
-    System.out.println("7. Load/unload a container to/from a vehicle");
-    System.out.println("8. Exit"); // Add an option to exit the container management menu
+    ContainerCRUDView containerCRUDView = new ContainerCRUDView();
+    containerCRUDView.displayContainerCRUD();
+
 
     }
 
@@ -45,12 +40,8 @@ public class AdminController {
     }
 
     public static void manageUser() {
-    System.out.println("============= Human Resources =============");
-    System.out.println("1. View all port managers");
-    System.out.println("2. Add a new manager");
-    System.out.println("3. Remove a manager");
-    System.out.println("4. Update manager information");
-    System.out.println("5. Back"); // Add an option to exit the user management menu
+        UserCRUDView userCRUDView = new UserCRUDView();
+        userCRUDView.displayUserCRUD();
 
     }
 

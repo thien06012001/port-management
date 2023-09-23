@@ -84,7 +84,7 @@ public class ContainerCRUD {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH))) {
             bw.write("# Container File\n# Format: ContainerID, Weight, Type");
             for (Container container : containers) {
-                bw.write("\n" + container.getId() + ", " + container.getWeight() + ", " + container.getType());
+                bw.write("\n" + container.getId() + ", " + container.getWeight() + ", " + container.getType() + ", " + container.getStatus() + ", " + container.getLocationId());
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -15,6 +15,8 @@ import thiendev.Ship;
 import thiendev.Truck;
 
 public class VehicleCRUD {
+    private static final String PORT_FILE_PATH = System.getProperty("user.dir") + "/src/database/Port.txt";
+    private static final String VEHICLE_FILE_PATH = System.getProperty("user.dir") + "/src/database/Vehicle.txt";
 
     private static final String FILE_PATH = System.getProperty("user.dir") + "/src/database/Vehicle.txt";
     private List<Container> containers = new ArrayList<>();
@@ -172,11 +174,121 @@ public class VehicleCRUD {
         return null; // Return null if no vehicle with the given ID is found
     }
 
+    public static Vehicle loadVehicleFromId(String vehicleId) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(VEHICLE_FILE_PATH))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Skip comments or empty lines
+                if (line.startsWith("#") || line.trim().isEmpty()) {
+                    continue;
+                }
+
+                String[] data = line.split(",");
+                if (data[0].trim().equals(vehicleId)) {
+                    // Extracting data from the file
+                    String id = data[0].trim();
+                    String name = data[1].trim();
+                    String type = data[2].trim();
+                    double fuelCapacity = Double.parseDouble(data[3].trim());
+                    double carryingCapacity = Double.parseDouble(data[4].trim());
+                    double currentFuel = Double.parseDouble(data[5].trim());
+                    String truckType = data[6].trim();
+                    String currentPortId = data[7].trim();
+
+                    // Check if the vehicle is a Truck or Ship and create the corresponding object
+                    if (type.equals("Truck")) {
+                        return new Truck(id, name, fuelCapacity, carryingCapacity, currentFuel, truckType,
+                                currentPortId);
+                    } else if (type.equals("Ship")) {
+                        // Assuming Ship has a similar constructor
+                        return new Ship(id, name, fuelCapacity, carryingCapacity, currentFuel, currentPortId);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Port loadPortFromId(String portId) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(PORT_FILE_PATH))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Skip comments or empty lines
+                if (line.startsWith("#") || line.trim().isEmpty()) {
+                    continue;
+                }
+
+                String[] data = line.split(",");
+                if (data[0].trim().equals(portId)) {
+                    // Extracting data from the file
+                    String id = data[0].trim();
+                    String name = data[1].trim();
+                    double latitude = Double.parseDouble(data[2].trim());
+                    double longitude = Double.parseDouble(data[3].trim());
+                    double storingCapacity = Double.parseDouble(data[4].trim());
+                    boolean landingAbility = Boolean.parseBoolean(data[5].trim());
+
+                    // Create and return the Port object
+                    return new Port(id, name, latitude, longitude, storingCapacity, landingAbility);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static boolean checkMoveToPort(String vehicleId, String portId) {
+        // Load the vehicle and destination port using their IDs
+        Vehicle vehicle = loadVehicleFromId(vehicleId);
+
+        Port departurePort = loadPortFromId(vehicle.getCurrentPortId());
+        Port destinationPort = loadPortFromId(portId);
+
+        // If either the vehicle or port couldn't be loaded, return false
+        if (vehicle == null || destinationPort == null) {
+            return false;
+        }
+
+        // Calculate the distance from the vehicle's current port to the destination
+        // port
+        double distance = calculateDistance(departurePort, destinationPort);
+
+        // Calculate the required fuel for the journey
+        double requiredFuel = 0;
+        for (Container c : vehicle.getContainersList()) {
+            if (vehicle.getType().equals("Ship")) {
+                requiredFuel += c.getFuelConsumptionForShip() * distance;
+            } else if (vehicle.getType().equals("Truck")) {
+                requiredFuel += c.getFuelConsumptionForTruck() * distance;
+            }
+        }
+
+        // Check if the vehicle has enough fuel for the journey
+        if (vehicle.getCurrentFuel() >= requiredFuel) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public static double calculateDistance(Port startingPort, Port destinationPort) {
+        final int R = 6371; 
+        double latDistance = Math.toRadians(destinationPort.getLatitude() - startingPort.getLatitude());
+        double lonDistance = Math.toRadians(destinationPort.getLongitude() - startingPort.getLongitude());
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(startingPort.getLatitude())) * Math.cos(Math.toRadians(destinationPort.getLatitude()))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    }
     public static void main(String[] args) {
         VehicleCRUD crud = new VehicleCRUD();
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Login login = new Login();
         PortCRUD portCRUD = new PortCRUD();
+
         while (true) {
             System.out.println("Choose an operation:");
             System.out.println("1. Display all vehicles");
@@ -300,6 +412,30 @@ public class VehicleCRUD {
                         System.out.print("\033c");
                         login.displayLogin();
                         return;
+                    case 9:
+                        System.out.println("Check if a vehicle can move to a port");
+                        System.out.println("Enter Vehicle ID:");
+                        String checkVehicleId = reader.readLine();
+                        System.out.println("Enter Port ID:");
+                        String checkPortId = reader.readLine();
+
+                        boolean canMove = checkMoveToPort(checkVehicleId, checkPortId);
+                        if (canMove) {
+                            System.out.println("The vehicle can move to the specified port.");
+
+                            // Update the currentPort attribute of the vehicle in the file
+                            Vehicle vehicleToUpdate = crud.readVehicle(checkVehicleId);
+                            if (vehicleToUpdate != null) {
+                                vehicleToUpdate.setCurrentPortId(checkPortId);
+                                crud.updateVehicle(checkVehicleId, vehicleToUpdate);
+                                System.out.println("Vehicle's current port has been updated to: " + checkPortId);
+                            } else {
+                                System.out.println("Error: Unable to find the vehicle with ID: " + checkVehicleId);
+                            }
+                        } else {
+                            System.out.println("The vehicle cannot move to the specified port.");
+                        }
+                        break;
                     default:
                         System.out.println("Invalid choice. Please try again.");
                 }

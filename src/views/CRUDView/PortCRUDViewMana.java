@@ -3,16 +3,14 @@ package views.CRUDView;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.List;
-
 import CRUD.PortCRUD;
 import models.port.Port;
-import views.menu.Login;
+
 
 public class PortCRUDViewMana {
     public void displayPortCRUD() {
         PortCRUD crud = new PortCRUD();
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        Login login = new Login();
         while (true) {
             System.out.println("Choose an operation:");
             System.out.println("1. Display all ports");
@@ -52,7 +50,7 @@ public class PortCRUDViewMana {
                     case 3:
                         System.out.println("Going back...");
                         System.out.print("\033c");
-                        views.menu.Login.displayLogin(); // Call the displayLogin method from the Login class
+                        views.menu.ManagerMenu.displayManagerMenu(); // Call the displayLogin method from the Login class
                         return;
                     default:
                         System.out.println("Invalid choice. Please try again.");

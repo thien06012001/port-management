@@ -137,4 +137,7 @@ public abstract class Vehicle implements IVehicle {
     public double getCurrentFuel(){
         return currentFuel;
     }
+    public void setCurrentPortId(String id){
+        this.currentPortId = id;
+    }
 }

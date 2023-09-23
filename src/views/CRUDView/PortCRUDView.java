@@ -5,21 +5,23 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 import CRUD.PortCRUD;
+import CRUD.VehicleCRUD;
 import models.port.Port;
-import views.menu.Login;
+import models.vehicle.Vehicle;
+
 
 public class PortCRUDView {
     public void displayPortCRUD() {
         PortCRUD crud = new PortCRUD();
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        Login login = new Login();
         while (true) {
             System.out.println("Choose an operation:");
             System.out.println("1. Display all ports");
-            System.out.println("2. Add a port");
-            System.out.println("3. Update a port");
-            System.out.println("4. Delete a port");
-            System.out.println("5. Exit");
+            System.out.println("2. List all ships in a Port");
+            System.out.println("3. Add a port");
+            System.out.println("4. Update a port");
+            System.out.println("5. Delete a port");
+            System.out.println("6. Exit");
             try {
                 int choice = Integer.parseInt(reader.readLine());
                 switch (choice) {
@@ -37,6 +39,23 @@ public class PortCRUDView {
                         break;
                     case 2:
                         System.out.println("Enter Port ID:");
+                        String portId = reader.readLine();
+                        VehicleCRUD vehicleCRUD = new VehicleCRUD();
+                        List<Vehicle> vehicleList = vehicleCRUD.readAllVehicles();
+                        for (Vehicle vehicle : vehicleList) {
+                            if (vehicle.getId().startsWith("sh-") && vehicle.getCurrentPortId().equals(portId)) {
+                                System.out.println("Ship Id: " + vehicle.getId());
+                                System.out.println("Ship Name: " + vehicle.getName());
+                                System.out.println("Ship Fuel Capacity: " + vehicle.getFuelCapacity());
+                                System.out.println("Ship Carrying Capacity: " + vehicle.getCarryingCapacity());
+                                System.out.println("Ship Current Fuel: " + vehicle.getCurrentFuel());
+                                System.out.println("Current Port: " + vehicle.getCurrentPortId());
+                                System.out.println();
+                            }
+                        }
+                        break;
+                    case 3:
+                        System.out.println("Enter Port ID:");
                         String id = reader.readLine();
                         System.out.println("Enter Port Name:");
                         String name = reader.readLine();
@@ -50,7 +69,7 @@ public class PortCRUDView {
                         Boolean landingAbility = Boolean.parseBoolean(reader.readLine());
                         crud.addPort(new Port(id, name, latitude, longitude, storingCapacity, landingAbility));
                         break;
-                    case 3:
+                    case 4:
                         System.out.println("Enter Port ID to update:");
                         String updateId = reader.readLine();
                         System.out.println("Enter Port Name:");
@@ -66,15 +85,15 @@ public class PortCRUDView {
                         crud.updatePort(updateId, new Port(updateId, updatedName, updatedLatitude, updatedLongitude,
                                 updatedStoringCapacity, updatedLandingAbility));
                         break;
-                    case 4:
+                    case 5:
                         System.out.println("Enter Port ID to delete:");
                         String deleteId = reader.readLine();
                         crud.deletePort(deleteId);
                         break;
-                    case 5:
+                    case 6:
                         System.out.println("Going back...");
                         System.out.print("\033c");
-                        login.displayLogin(); // Call the displayLogin method from the Login class
+                        views.menu.AdminMenu.displayAdminMenu(); 
                         return;
                     default:
                         System.out.println("Invalid choice. Please try again.");
