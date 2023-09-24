@@ -1,4 +1,4 @@
-package views.CRUDView;
+package views.CRUDView.admin;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -59,7 +59,6 @@ public class VehicleCRUDView {
                 System.out.println(
                         "Error: A vehicle with the entered ID already exists. Please enter a unique ID.");
                 return;
-
             }
             System.out.println("Enter Vehicle Name:");
             String name = reader.readLine();
@@ -83,13 +82,18 @@ public class VehicleCRUDView {
                 String truckType = reader.readLine();
                 crud.addVehicle(new Truck(id, name, fuelCapacity, carryingCapacity, currentFuel,
                         truckType, currentPortId));
+                System.out.println("\033c");
+                System.out.println("Vehicle added successfully!");
             } else if ("Ship".equalsIgnoreCase(type)) {
                 crud.addVehicle(
                         new Ship(id, name, fuelCapacity, carryingCapacity, currentFuel, currentPortId));
+                System.out.println("\033c");
+                System.out.println("Vehicle added successfully!");
             } else {
                 System.out.println("Invalid vehicle type!");
             }
         } catch (NumberFormatException e) {
+            System.out.println("\033c");
             System.out.println(
                     "Please enter a valid number for fuel capacity, carrying capacity, or current fuel.");
         } catch (Exception e) {
@@ -98,6 +102,7 @@ public class VehicleCRUDView {
     }
 
     public static void updateAVehicle() {
+        System.out.println("\033c");
         try {
             System.out.println("Enter Vehicle ID to update:");
             String updateId = reader.readLine();
@@ -127,11 +132,16 @@ public class VehicleCRUDView {
                         new Truck(updateId, updateName, updateFuelCapacity,
                                 updateCarryingCapacity, updateCurrentFuel, updateTruckType,
                                 existingVehicle.getCurrentPortId()));
+                System.out.println("\033c");
+                System.out.println("Vehicle update successfully!");
             } else if ("Ship".equalsIgnoreCase(updateType)) {
                 crud.updateVehicle(updateId,
                         new Ship(updateId, updateName, updateFuelCapacity,
                                 updateCarryingCapacity, updateCurrentFuel, existingVehicle.getCurrentPortId()));
+                System.out.println("\033c");
+                System.out.println("Vehicle update successfully!");
             } else {
+                System.out.println("\033c");
                 System.out.println("Invalid vehicle type!");
             }
         } catch (NumberFormatException e) {
@@ -143,10 +153,17 @@ public class VehicleCRUDView {
     }
 
     public static void deleteAVehicle() {
-        System.out.println("Enter Vehicle ID to delete:");
-        String deleteId;
+        System.out.println("\033c");
+
         try {
+            System.out.println("Enter Vehicle ID to delete:");
+            String deleteId;
             deleteId = reader.readLine();
+            Vehicle deleteVehicle = crud.readVehicle(deleteId);
+            if (deleteVehicle == null) {
+                System.out.println("\033c");
+                System.out.println("The Vehicle does not exist.");
+            }
             crud.deleteVehicle(deleteId);
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -156,12 +173,15 @@ public class VehicleCRUDView {
     }
 
     public static void loadContainer() {
+        System.out.println("\033c");
+        boolean canLoad = true;
         try {
-            System.out.println("Assign a container to a truck");
+            System.out.println("Assign a container to a vehicle");
             System.out.println("Enter Vehicle ID:");
             String vehicleId = reader.readLine();
             Vehicle currentVehicle = crud.readVehicle(vehicleId);
             if (currentVehicle == null) {
+                System.out.println("\033c");
                 System.out.println("The vehicle does not exist.");
                 return;
             }
@@ -170,21 +190,24 @@ public class VehicleCRUDView {
             ContainerCRUD containerCRUD = new ContainerCRUD();
             Container currentContainer = containerCRUD.readContainerById(containerId);
             if (currentContainer == null) {
+                System.out.println("\033c");
                 System.out.println("The container does not exist.");
                 return;
             }
             if (currentContainer.getStatus() == "Loaded") {
+                System.out.println("\033c");
                 System.out.println("The container is already loaded.");
                 return;
             }
             if (!currentContainer.getLocationId().equals(currentVehicle.getCurrentPortId())) {
+                System.out.println("\033c");
                 System.out.println("The container and the vehicle are not on the same port.");
                 return;
             }
             if (vehicleId.startsWith("tr-")) {
                 Truck truck = (Truck) currentVehicle;
                 String truckType = truck.getTruckType();
-                boolean canLoad = false;
+
                 switch (truckType) {
                     case "Basic":
                         if (currentContainer.getType().equals("DryStorage")
@@ -192,6 +215,7 @@ public class VehicleCRUDView {
                                 || currentContainer.getType().equals("OpenSide")) {
                             canLoad = true;
                         } else {
+                            System.out.println("\033c");
                             System.out.println(
                                     "Basic truck can't carry this container type: "
                                             + currentContainer.getType());
@@ -202,6 +226,7 @@ public class VehicleCRUDView {
                         if (currentContainer.getType().equals("Refrigerated")) {
                             canLoad = true;
                         } else {
+                            System.out.println("\033c");
                             System.out.println(
                                     "Reefer truck can't carry this container type: "
                                             + currentContainer.getType());
@@ -212,6 +237,7 @@ public class VehicleCRUDView {
                         if (currentContainer.getType().equals("Liquid")) {
                             canLoad = true;
                         } else {
+                            System.out.println("\033c");
                             System.out.println(
                                     "Tanker truck can't carry this container type: "
                                             + currentContainer.getType());
@@ -219,30 +245,33 @@ public class VehicleCRUDView {
                         break;
 
                     default:
+                        System.out.println("\033c");
                         System.out.println("Unknown truck type: " + truckType);
                         break;
                 }
 
-                if (canLoad) {
-                    // getContainersList().add(container);
-                    double totalWeightInVehicle = 0.0;
-                    List<Container> containersList = containerCRUD.readAllContainers();
-                    for (Container container : containersList) {
-                        if (container.getLocationId().equals(currentVehicle.getId())) {
-                            totalWeightInVehicle += container.getWeight();
-                        }
+            }
+            if (canLoad) {
+                // getContainersList().add(container);
+                double totalWeightInVehicle = 0.0;
+                List<Container> containersList = containerCRUD.readAllContainers();
+                for (Container container : containersList) {
+                    if (container.getLocationId().equals(currentVehicle.getId())) {
+                        totalWeightInVehicle += container.getWeight();
                     }
-                    if (currentContainer.getWeight() + totalWeightInVehicle <= currentVehicle
-                            .getCarryingCapacity()) {
+                }
+                if (currentContainer.getWeight() + totalWeightInVehicle <= currentVehicle
+                        .getCarryingCapacity()) {
 
-                        containerCRUD.updateContainer(containerId,
-                                new Container(containerId, currentContainer.getWeight(),
-                                        currentContainer.getType(), "Loaded", vehicleId));
-                    } else {
-                        System.out.println("Too much weight to load this container!");
-                        System.out.println(currentVehicle.getCarryingCapacity());
-                        return;
-                    }
+                    containerCRUD.updateContainer(containerId,
+                            new Container(containerId, currentContainer.getWeight(),
+                                    currentContainer.getType(), "Loaded", vehicleId));
+                    System.out.println("\033c");
+                    System.out.println("The container is loaded!");
+                } else {
+                    System.out.println("\033c");
+                    System.out.println("Too much weight to load this container!");
+                    return;
                 }
             }
         } catch (Exception e) {
@@ -252,12 +281,15 @@ public class VehicleCRUDView {
     }
 
     public static void unloadContainer() {
+        System.out.println("\033c");
         try {
             System.out.println("Unload container from vehicle");
             System.out.println("Enter Vehicle ID:");
             String unloadVehicleId = reader.readLine();
             Vehicle currentUnloadVehicle = crud.readVehicle(unloadVehicleId);
             if (currentUnloadVehicle == null) {
+                System.out.println("\033c");
+
                 System.out.println("The vehicle does not exist.");
                 return;
             }
@@ -266,14 +298,20 @@ public class VehicleCRUDView {
             ContainerCRUD unloadContainerCRUD = new ContainerCRUD();
             Container currentUnloadContainer = unloadContainerCRUD.readContainerById(unloadContainerId);
             if (currentUnloadContainer == null) {
+                System.out.println("\033c");
+
                 System.out.println("The container does not exist.");
                 return;
             }
             if (currentUnloadContainer.getStatus() == "Loaded") {
+                System.out.println("\033c");
+
                 System.out.println("The container is already loaded.");
                 return;
             }
             if (!currentUnloadContainer.getLocationId().equals(currentUnloadVehicle.getId())) {
+                System.out.println("\033c");
+
                 System.out.println("The container are not on the vehicle.");
                 return;
             }
@@ -290,13 +328,15 @@ public class VehicleCRUDView {
             }
             if (currentUnloadContainer.getWeight() + totalWeightInPort <= currentUnloadPort
                     .getStoringCapacity()) {
+                System.out.println("\033c");
+
                 System.out.println("Unload successfully.");
-                System.out.println(currentUnloadPort
-                        .getStoringCapacity());
                 unloadContainerCRUD.updateContainer(unloadContainerId,
                         new Container(unloadContainerId, currentUnloadContainer.getWeight(),
                                 currentUnloadContainer.getType(), "OnWait", currentUnloadPort.getId()));
             } else {
+                System.out.println("\033c");
+
                 System.out.println("Too much weight to load this container to the current port!");
                 return;
             }
@@ -308,31 +348,34 @@ public class VehicleCRUDView {
     }
 
     public static void refuelContainer() {
+        System.out.println("\033c");
+
         try {
             System.out.println("Refuel Vehicle");
             System.out.println("Enter Vehicle ID:");
             String refuelVehicleId = reader.readLine();
             Vehicle currentRefuelVehicle = crud.readVehicle(refuelVehicleId);
-            System.out.println(currentRefuelVehicle.getId());
-            VehicleCRUD currentRefuelVehicleCRUD = new VehicleCRUD();
             if (currentRefuelVehicle == null) {
+                System.out.println("\033c");
                 System.out.println("The vehicle does not exist.");
                 return;
             }
             if (refuelVehicleId.startsWith("tr-")) {
                 Truck newTruck = (Truck) currentRefuelVehicle;
-                currentRefuelVehicleCRUD.updateVehicle(refuelVehicleId,
+                crud.updateVehicle(refuelVehicleId,
                         new Truck(newTruck.getId(), newTruck.getName(), newTruck.getFuelCapacity(),
                                 newTruck.getCarryingCapacity(), newTruck.getFuelCapacity(),
                                 newTruck.getTruckType(), newTruck.getCurrentPortId()));
+
             } else if (refuelVehicleId.startsWith("sh-")) {
                 Ship newShip = (Ship) currentRefuelVehicle;
-                currentRefuelVehicleCRUD.updateVehicle(refuelVehicleId,
+                crud.updateVehicle(refuelVehicleId,
                         new Ship(newShip.getId(), newShip.getName(), newShip.getFuelCapacity(),
                                 newShip.getCarryingCapacity(), newShip.getFuelCapacity(),
                                 newShip.getCurrentPortId()));
             }
-
+            System.out.println("\033c");
+            System.out.println("The vehicle refuel successfully!");
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
@@ -340,12 +383,15 @@ public class VehicleCRUDView {
     }
 
     public static void moveToPort() {
+        System.out.println("\033c");
         try {
             System.out.println("Check if a vehicle can move to a port");
             System.out.println("Enter Vehicle ID:");
             String checkVehicleId = reader.readLine();
             Vehicle existingVehicle = crud.readVehicle(checkVehicleId);
             if (existingVehicle == null) {
+                System.out.println("\033c");
+
                 System.out.println(
                         "There is no vehicle with this ID in the system");
                 return;
@@ -354,6 +400,8 @@ public class VehicleCRUDView {
             String checkPortId = reader.readLine();
             Port currentPort = portCRUD.readPort(checkPortId);
             if (currentPort == null) {
+                System.out.println("\033c");
+
                 System.out.println(
                         "Error: The entered currentPortID does not match any port in the system.");
                 return;
@@ -361,6 +409,8 @@ public class VehicleCRUDView {
 
             boolean canMove = crud.checkMoveToPort(checkVehicleId, checkPortId);
             if (canMove) {
+                System.out.println("\033c");
+
                 System.out.println("The vehicle can move to the specified port.");
                 // Update the currentPort attribute of the vehicle in the file
                 Vehicle vehicleToUpdate = crud.readVehicle(checkVehicleId);
@@ -389,10 +439,14 @@ public class VehicleCRUDView {
                     System.out.println("Vehicle's current port has been updated to: " +
                             checkPortId);
                 } else {
+                    System.out.println("\033c");
+
                     System.out.println("Error: Unable to find the vehicle with ID: " +
                             checkVehicleId);
                 }
             } else {
+                System.out.println("\033c");
+
                 System.out.println("The vehicle cannot move to the specified port.");
             }
         } catch (Exception e) {
@@ -418,30 +472,54 @@ public class VehicleCRUDView {
                 int choice = Integer.parseInt(reader.readLine());
                 switch (choice) {
                     case 1:
+                        System.out.println("╔════════════════════════════╗");
+                        System.out.println("║         All Vehicle        ║");
+                        System.out.println("╚════════════════════════════╝");
                         displayAllVehicle();
                         break;
                     case 2:
+                        System.out.println("╔════════════════════════════╗");
+                        System.out.println("║         Add Vehicle        ║");
+                        System.out.println("╚════════════════════════════╝");
                         addAVehicle();
                         break;
                     case 3:
+                        System.out.println("╔════════════════════════════╗");
+                        System.out.println("║       Update Vehicle       ║");
+                        System.out.println("╚════════════════════════════╝");
                         updateAVehicle();
                         break;
 
                     case 4:
+                        System.out.println("╔════════════════════════════╗");
+                        System.out.println("║       Delete Vehicle       ║");
+                        System.out.println("╚════════════════════════════╝");
                         deleteAVehicle();
                         break;
 
                     case 5:
+                        System.out.println("╔════════════════════════════╗");
+                        System.out.println("║       Load Container       ║");
+                        System.out.println("╚════════════════════════════╝");
                         loadContainer();
                         break;
                     case 6:
+                        System.out.println("╔════════════════════════════╗");
+                        System.out.println("║       Unload Container     ║");
+                        System.out.println("╚════════════════════════════╝");
                         unloadContainer();
                         break;
                     case 7:
+                        System.out.println("╔════════════════════════════╗");
+                        System.out.println("║           Refuel           ║");
+                        System.out.println("╚════════════════════════════╝");
                         refuelContainer();
                         break;
 
                     case 8:
+                        System.out.println("╔════════════════════════════╗");
+                        System.out.println("║        Move To Port        ║");
+                        System.out.println("╚════════════════════════════╝");
                         moveToPort();
                         break;
                     case 9:

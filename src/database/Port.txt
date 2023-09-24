@@ -1,6 +1,6 @@
 # Port File
 # Format: PortID, PortName, PortLatitude, PortLongitude, PortStoringCapacity, PortLandingAbility 
-p-00001, Shanghai Port, 31.2354, 121.4781, 1000000.0, true
+p-00001, Ho Chi Minh Port, 100.0, 200.0, 300000.0, true
 p-00002, Rotterdam Port, 51.9225, 4.47917, 800000.0, true
 p-00003, Valencia Port, 39.4698, -0.3755, 600000.0, false
 p-00004, Busan Port, 35.1796, 129.075, 750000.0, true

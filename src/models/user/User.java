@@ -20,7 +20,7 @@ public abstract class User {
     private String password;
     private String role; // e.g. "Admin", "PortManager"
     private String associatedPort; // for Port Managers
-
+    private boolean isAuthenticated;
     // Constructor
   
   
@@ -28,11 +28,12 @@ public abstract class User {
     public String getPassword() {
 		return password;
 	}
-	public User(String username, String password, String role, String associatedPort) {
+	public User(String username, String password, String role, String associatedPort,boolean isAuthenticated) {
         this.username = username;
         this.password = password;
         this.role = role;
         this.associatedPort = associatedPort;
+        this.isAuthenticated = isAuthenticated;
     }
  
 
@@ -57,6 +58,10 @@ public abstract class User {
         return associatedPort;
     }
 
+    public Boolean getIsAuthenticated() {
+        return isAuthenticated;
+    }
+    
     public void setAssociatedPort(String associatedPort) {
         if ("PortManager".equals(this.role)) {
             this.associatedPort = associatedPort;

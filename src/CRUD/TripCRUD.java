@@ -36,7 +36,15 @@ public class TripCRUD {
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c;
     }
-
+    public Trip readTripById(String tripId) {
+        List<Trip> trips = readAllTrips();
+        for (Trip trip : trips) {
+            if (trip.getTripId().equals(tripId)) {
+                return trip;
+            }
+        }
+        return null; // Return null if no container with the given ID is found
+    }
     public double calculateRequireFuel(String departurePortId, String arrivalPortId, String vehicleId) {
         VehicleCRUD crud = new VehicleCRUD();
         // Load the vehicle and destination port using their IDs
@@ -113,12 +121,12 @@ public class TripCRUD {
                 }
 
                 String[] parts = line.split(", ");
-                if (parts.length != 6) {
+                if (parts.length != 7) {
                     System.err.println("Invalid line: " + line);
                     continue;
                 }
-
-                String vehicleID = parts[0];
+                String tripId = parts[0];
+                String vehicleID = parts[1];
                 Vehicle vehicle = vehicleCRUD.readVehicle(vehicleID); // Look up the vehicle details
 
                 if (vehicle == null) {
@@ -136,13 +144,13 @@ public class TripCRUD {
                             vehicle.getFuelCapacity(), vehicle.getCarryingCapacity(), vehicle.getCurrentPortId());
                 }
 
-                Port departurePort = portCRUD.readPort(parts[1]);
-                Port arrivalPort = portCRUD.readPort(parts[2]);
-                Date departureDate = DATE_FORMAT.parse(parts[3]);
-                Date arrivalDate = DATE_FORMAT.parse(parts[4]);
-                String status = parts[5];
+                Port departurePort = portCRUD.readPort(parts[2]);
+                Port arrivalPort = portCRUD.readPort(parts[3]);
+                Date departureDate = DATE_FORMAT.parse(parts[4]);
+                Date arrivalDate = DATE_FORMAT.parse(parts[5]);
+                String status = parts[6];
 
-                Trip trip = new Trip(vehicle, departurePort, arrivalPort, departureDate, arrivalDate, status);
+                Trip trip = new Trip(tripId, vehicle, departurePort, arrivalPort, departureDate, arrivalDate, status);
                 trips.add(trip);
             }
 
@@ -164,7 +172,7 @@ public class TripCRUD {
         if (vehicleCRUD.checkMoveToPort(vehicleId, departurePortId)) {
             // The vehicle can move to the destination port, so proceed to add the trip
             try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
-                bw.write("\n" + trip.getVehicle().getId() + ", " + trip.getDeparturePort().getId() + ", "
+                bw.write("\n" + trip.getTripId() + ", " + trip.getVehicle().getId() + ", " + trip.getDeparturePort().getId() + ", "
                         + trip.getArrivalPort().getId() + ", "
                         + DATE_FORMAT.format(trip.getDepartureDate()) + ", " + DATE_FORMAT.format(trip.getArrivalDate())
                         + ", " + trip.getStatus());
@@ -181,8 +189,8 @@ public class TripCRUD {
             bw.write(
                     "# Trip File\n# Format: Vehicle ID, Departure Port, Arrival Port, Departure Date, Arrival Date, Status");
             for (Trip trip : trips) {
-                bw.write("\n" + trip.getVehicle().getId() + ", " + trip.getDeparturePort().getName() + ", "
-                        + trip.getArrivalPort().getName() + ", " + DATE_FORMAT.format(trip.getDepartureDate())
+                bw.write("\n" +trip.getTripId() + ", " + trip.getVehicle().getId() + ", " + trip.getDeparturePort().getId() + ", "
+                        + trip.getArrivalPort().getId() + ", " + DATE_FORMAT.format(trip.getDepartureDate())
                         + ", " + DATE_FORMAT.format(trip.getArrivalDate()) + ", " + trip.getStatus());
             }
         } catch (IOException e) {
@@ -190,11 +198,11 @@ public class TripCRUD {
         }
     }
 
-    public void updateTrip(String vehicleId, Trip updatedTrip) {
+    public void updateTrip(String tripId, Trip updatedTrip) {
         List<Trip> trips = readAllTrips();
         int index = -1;
         for (int i = 0; i < trips.size(); i++) {
-            if (trips.get(i).getVehicle().getId().equals(vehicleId)) {
+            if (trips.get(i).getTripId().equals(tripId)) {
                 index = i;
                 break;
             }
@@ -203,17 +211,18 @@ public class TripCRUD {
             trips.set(index, updatedTrip);
             writeAllTrips(trips);
         } else {
-            System.out.println("Trip with vehicle ID " + vehicleId + " not found.");
+            System.out.println("Trip with  ID " + tripId + " not found.");
         }
     }
 
-    public void deleteTrip(String vehicleId) {
+    public void deleteTrip(String tripId) {
         List<Trip> trips = readAllTrips();
-        trips.removeIf(trip -> trip.getVehicle().getId().equals(vehicleId));
+        trips.removeIf(trip -> trip.getTripId().equals(tripId));
         writeAllTrips(trips);
     }
 
     public void listTripsOnGivenDay() {
+        System.out.println("\033c");
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Enter the date (dd-MM-yyyy) to list trips:");
         try {
@@ -249,6 +258,7 @@ public class TripCRUD {
     }
 
     public void listTripsFromDayAToDayB() {
+         System.out.println("\033c");
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         try {
             System.out.println("Enter the start date (dd-MM-yyyy):");

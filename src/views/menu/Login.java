@@ -6,17 +6,20 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import CRUD.UserCRUD;
 import models.user.Admin;
 import models.user.PortManager;
+import models.user.User;
 import views.welcomePageView.WelcomePageView;
 
 public class Login {
 
     private static final String USER_FILE_PATH = System.getProperty("user.dir") + "/src/database/User.txt";
-
+    private UserCRUD userCRUD = new UserCRUD();
     private Map<String, UserCredentials> users = new HashMap<>();
 
     public Login() {
@@ -63,30 +66,43 @@ public class Login {
         System.out.println("╔════════════════════════════╗");
         System.out.println("║         LOGIN PAGE         ║");
         System.out.println("╚════════════════════════════╝");
-
+        // List<User> userList = userCRUD.readAllUsers();
         System.out.print("Enter username: ");
         String username = scanner.nextLine();
+        User user = userCRUD.readUser(username);
+        if (user == null) {
+            System.out.println("\033c");
+            System.out.println("User does not exist");
+            return;
+        }
         System.out.print("Enter password: ");
         String password = scanner.nextLine();
-
-        UserCredentials user = users.get(username);
-        if (user != null && user.getPassword().equals(password)) {
+        if (!user.getPassword().equals(password)) {
             System.out.println("\033c");
-            // System.out.println("Logged in as " + user.getRole());
-            System.out.println("Logged in successfully!");
+            System.out.println("Wrong password!");
+            return;
+        }
 
-            if (user.getAssociatedPort() != null) {
-                if ("Admin".equals(user.getRole())) {
-                    System.out.println("Welcome back. You can can access and process all the information as an Admin");
-                    views.menu.AdminMenu.displayAdminMenu();
-
-                } else {
-                    System.out.println("Associated Port: " + user.getAssociatedPort());
-                    views.menu.ManagerMenu.displayManagerMenu();
-                }
-            }
+        if (user.getRole().equals("Admin")) {
+            userCRUD.updateUsers(user.getUsername(),
+                    new Admin(user.getUsername(), user.getPassword(),
+                            "Admin",
+                            true));
         } else {
-            System.out.println("Invalid username or password.");
+            userCRUD.updateUsers(user.getUsername(),
+                    new PortManager(user.getUsername(), user.getPassword(),
+                            "PortManager", user.getAssociatedPort(),
+                            true));
+        }
+        System.out.println("\033c");
+        System.out.println("Logged in successfully!");
+        if ("Admin".equals(user.getRole())) {
+            System.out.println("Welcome back. You can can access and process all the information as an Admin");
+            views.menu.AdminMenu.displayAdminMenu();
+
+        } else {
+            System.out.println("Associated Port: " + user.getAssociatedPort());
+            views.menu.ManagerMenu.displayManagerMenu();
         }
 
     }

@@ -1,6 +1,8 @@
 package controller;
 
-import views.CRUDView.*;
+import views.CRUDView.admin.*;
+import views.CRUDView.admin.ContainerCRUDView;
+
 
 
 public class AdminController {
@@ -12,8 +14,6 @@ public class AdminController {
     public static void manageContainer() {
     ContainerCRUDView containerCRUDView = new ContainerCRUDView();
     containerCRUDView.displayContainerCRUD();
-
-
     }
 
     public static void manageVehicle() {
@@ -30,7 +30,6 @@ public class AdminController {
     public static void manageUser() {
         UserCRUDView userCRUDView = new UserCRUDView();
         userCRUDView.displayUserCRUD();
-
     }
 
 }

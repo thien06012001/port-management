@@ -1,14 +1,13 @@
 # Container File
 # Format: Username, Password, Role, associatedPort
-portadmin, 123456, Admin, -
-portmana1, manager1, PortManager, p-00001
-portmana2, manager2, PortManager, p-00002
-portmana3, manager3, PortManager, p-00003
-portmana4, manager4, PortManager, p-00004
-portmana5, manager5, PortManager, p-00005
-portmana6, manager6, PortManager, p-00006
-portmana7, manager7, PortManager, p-00007
-portmana8, manager8, PortManager, p-00008
-portmana9, manager9, PortManager, p-00009
-portmana10, manager10, PortManager, p-00010
-
+portadmin, 123456, Admin, null, false
+portmana1, manager1, PortManager, p-00001, false
+portmana2, manager2, PortManager, p-00002, false
+portmana3, manager3, PortManager, p-00003, false
+portmana4, manager4, PortManager, p-00004, false
+portmana5, manager5, PortManager, p-00005, false
+portmana6, manager6, PortManager, p-00006, false
+portmana7, manager7, PortManager, p-00007, false
+portmana8, manager8, PortManager, p-00008, false
+portmana9, manager9, PortManager, p-00009, false
+portmana12, manager10, PortManager, p-00010, false

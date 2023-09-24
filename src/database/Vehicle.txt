@@ -1,23 +1,23 @@
 # Vehicle File
 # Format: ID, Name, Type, Fuel Capacity, Carrying Capacity, Current Fuel
-tr-001, BigTruckss1, Truck, 200.0, 500000.0, 500000.0, Tanker, none
+tr-001, BigTruck1, Truck, 1.0E8, 200.0, 1.0E7, Basic, p-00002
 tr-002, BigTruck2, Truck, 1000000.0, 2100.0, 1000000.0, Reefer, none
-tr-003, BigTruck3, Truck, 840000.0, 1040000.0, 2050.0, Tanker, none
-tr-004, BigTruck4, Truck, 1060000.0, 2020.0, 860000.0, Basic, p-00004
-tr-005, BigTruck5, Truck, 1080000.0, 203000.0, 880000.0, Basic, p-00005
+tr-003, BigTruck3, Truck, 40000.0, 1040000.0, 2050.0, Tanker, p-00003
+tr-004, BigTruck4, Truck, 1060000.0, 2020.0, 879485.1066717072, Basic, p-00004
+tr-005, BigTruck5, Truck, 1080000.0, 203000.0, 880000.0, Reefer, p-00005
 tr-006, BigTruck6, Truck, 1020000.0, 2040.0, 820000.0, Tanker, p-00004
 tr-007, BigTruck7, Truck, 1010000.0, 2015.0, 801000.0, Basic, p-00005
 tr-008, BigTruck8, Truck, 1030000.0, 2005.0, 830000.0, Reefer, p-00004
 tr-009, BigTruck9, Truck, 1050000.0, 2025.0, 850000.0, Tanker, p-00005
-tr-010, BigTruck10, Truck, 888000.0, 5550.0, 444040.0, Reefer, p-00002
-sh-001, BigShip1, Ship, 843778.6491500196, 1800000.0, 10000.0, none
-sh-002, BigShip2, Ship, 1900000.0, 10500.0, 1020000.0, p-00003
+tr-010, BigTruck10, Truck, 888000.0, 5550.0, 444040.0, Reefer, p-00001
+sh-001, BigShip1, Ship, 843778.6491500196, 1800000.0, 10000.0, p-00002
+sh-002, BigShip2, Ship, 1900000.0, 10500.0, 1900000.0, p-00003
 sh-003, BigShip3, Ship, 1840000.0, 10200.0, 1010000.0, none
 sh-004, BigShip4, Ship, 1860000.0, 10300.0, 1004000.0, p-00004
 sh-005, BigShip5, Ship, 1880000.0, 10400.0, 1006000.0, p-00005
 sh-006, BigShip6, Ship, 1820000.0, 10100.0, 1008000.0, p-00004
 sh-007, BigShip7, Ship, 1810000.0, 10005.0, 1003000.0, p-00005
-sh-008, BigShip8, Ship, 1830000.0, 10150.0, 1001000.0, p-00001
+sh-008, BigShip8, Ship, 1830000.0, 10150.0, 1787042.281016905, p-00002
 sh-009, BigShip9, Ship, 1650000.0, 10250.0, 1005000.0, p-00002
-sh-010, BigShip10, Ship, 1470000.0, 15850.0, 1007000.0, p-00003
+sh-010, BigShip10, Ship, 1007000.0, 1470000.0, 15850.0, p-00004
 sh-012, BigShip12, Ship, 798000.0, 12111.0, 1110100.0, p-00006

@@ -1,4 +1,4 @@
-package views.CRUDView;
+package views.CRUDView.manager;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -6,9 +6,11 @@ import java.util.List;
 
 import CRUD.ContainerCRUD;
 import CRUD.PortCRUD;
+import CRUD.UserCRUD;
 import CRUD.VehicleCRUD;
 import models.container.Container;
 import models.port.Port;
+import models.user.User;
 import models.vehicle.Vehicle;
 
 public class ContainerCRUDView {
@@ -16,14 +18,18 @@ public class ContainerCRUDView {
     static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     static VehicleCRUD vehicleCRUD = new VehicleCRUD();
     static PortCRUD portCRUD = new PortCRUD();
+    private static UserCRUD userCRUD = new UserCRUD();
+    private static User currentUser = userCRUD.readAuthenticatedUser();
 
     public static double calculateWeight(String type) {
         double weight = 0;
         ContainerCRUD crud = new ContainerCRUD();
         List<Container> containers = crud.readAllContainers();
         for (Container container : containers) {
-            if (container.getType().equals(type)) {
-                weight += container.getWeight();
+            if (container.getLocationId().equals(currentUser.getAssociatedPort())) {
+                if (container.getType().equals(type)) {
+                    weight += container.getWeight();
+                }
             }
         }
         return weight;
@@ -42,12 +48,30 @@ public class ContainerCRUDView {
         }
     }
 
+    public static void displayAllContainersInPort() {
+        System.out.println("\033c");
+        List<Container> containers = crud.readAllContainers();
+        for (Container container : containers) {
+            if (container.getLocationId().equals(currentUser.getAssociatedPort())) {
+                System.out.println("Container ID: " + container.getId());
+                System.out.println("Weight: " + container.getWeight());
+                System.out.println("Type: " + container.getType());
+                System.out.println("Status: " + container.getStatus());
+                System.out.println("Location: " + container.getLocationId());
+                System.out.println();
+            }
+
+        }
+    }
+
     public static void calculateContainersWeight() {
         System.out.println("\033c");
         double totalWeight = 0;
         List<Container> allContainers = crud.readAllContainers();
         for (Container container : allContainers) {
-            totalWeight += container.getWeight();
+            if (container.getLocationId().equals(currentUser.getAssociatedPort())) {
+                totalWeight += container.getWeight();
+            }
         }
         System.out.println("All container weight: " + totalWeight);
         System.out.println("Dry storage weigh: " + calculateWeight("DryStorage"));
@@ -71,10 +95,23 @@ public class ContainerCRUDView {
             }
             System.out.println("Enter Container Weight:");
             double weight = Double.parseDouble(reader.readLine());
+
             System.out.println("Enter Container Type:");
             String type = reader.readLine();
+            if (!type.equals("DryStorage") && !type.equals("Liquid") && !type.equals("OpenSide")
+                    && !type.equals("OpenTop") && !type.equals("Refrigerated")) {
+                System.out.println("\033c");
+                System.out.println("invalid container type.");
+                return;
+            }
+            // At this point, 'type' contains a valid container type.
             System.out.println("Enter Status:");
             String status = reader.readLine();
+            if (!status.equals("Loaded") && !status.equals("OnWait")) {
+                System.out.println("\033c");
+                System.out.println("Invalid status.");
+                return;
+            }
             System.out.println("Enter Location Id:");
             String locationId = reader.readLine();
             Vehicle vehicle = vehicleCRUD.readVehicle(locationId);
@@ -118,10 +155,22 @@ public class ContainerCRUDView {
             }
             System.out.println("Enter new Container Weight:");
             double updateWeight = Double.parseDouble(reader.readLine());
-            System.out.println("Enter new Container Type:");
+            System.out.println("Enter Container Type:");
             String updateType = reader.readLine();
-            System.out.println("Enter new Container Status:");
+            if (!updateType.equals("DryStorage") && !updateType.equals("Liquid") && !updateType.equals("OpenSide")
+                    && !updateType.equals("OpenTop") && !updateType.equals("Refrigerated")) {
+                System.out.println("\033c");
+                System.out.println("invalid container type.");
+                return;
+            }
+            // At this point, 'type' contains a valid container type.
+            System.out.println("Enter Status:");
             String updateStatus = reader.readLine();
+            if (!updateStatus.equals("Loaded") && !updateStatus.equals("OnWait")) {
+                System.out.println("\033c");
+                System.out.println("invalid status.");
+                return;
+            }
             System.out.println("Enter new Container Location Id:");
             String updateLocation = reader.readLine();
             crud.updateContainer(updateId,
@@ -158,9 +207,9 @@ public class ContainerCRUDView {
 
         while (true) {
             System.out.println("Choose an operation:");
-            System.out.println("1. Display all containers");
-            System.out.println("2. Calculate containers weight");
-            System.out.println("3. Add a container");
+            System.out.println("1. Display all containers in the port");
+            System.out.println("2. Calculate containers weight in the port");
+            System.out.println("3. Add a container to port");
             System.out.println("4. Update a container");
             System.out.println("5. Delete a container");
             System.out.println("6. Back to menu");
@@ -168,7 +217,7 @@ public class ContainerCRUDView {
                 int choice = Integer.parseInt(reader.readLine());
                 switch (choice) {
                     case 1:
-                        displayAllContainers();
+                        displayAllContainersInPort();
                         break;
                     case 2:
                         calculateContainersWeight();

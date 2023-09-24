@@ -351,6 +351,10 @@ public class VehicleCRUD {
         // Load the vehicle and destination port using their IDs
         Vehicle vehicle = loadVehicleFromId(vehicleId);
         Port departurePort = loadPortFromId(vehicle.getCurrentPortId());
+        if(vehicle.getCurrentPortId().equals("none")) {
+            System.out.println("The vehicle is on the trip");
+            return false;
+        }
         System.out.println(departurePort);
         if(departurePort == null) {
             System.out.println("The vehicle is not in any port( Transporting container).");

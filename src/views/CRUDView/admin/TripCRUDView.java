@@ -1,4 +1,4 @@
-package views.CRUDView;
+package views.CRUDView.admin;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -26,6 +26,7 @@ public class TripCRUDView {
         System.out.println("\033c");
         List<Trip> trips = crud.readAllTrips();
         for (Trip trip : trips) {
+            System.out.println("Trip: " + trip.getTripId());
             System.out.println("Vehicle: " + trip.getVehicle().getName());
             System.out.println("Departure Port: " + trip.getDeparturePort().getName());
             System.out.println("Arrival Port: " + trip.getArrivalPort().getName());
@@ -39,6 +40,14 @@ public class TripCRUDView {
     public static void addATrip() {
         System.out.println("\033c");
         try {
+            System.out.println("Enter Trip ID:");
+            String tripId = reader.readLine();
+            Trip trip = crud.readTripById(tripId);
+            if (trip != null) {
+                System.out.println("\033c");
+                System.out.println("The trip is already exist.");
+                return;
+            }
             System.out.println("Enter Vehicle ID:");
             String vehicleId = reader.readLine();
             Vehicle vehicle = vehicleCRUD.readVehicle(vehicleId);
@@ -95,11 +104,15 @@ public class TripCRUDView {
             Date arrivalDate = DATE_FORMAT.parse(reader.readLine());
             System.out.println("Enter Status:");
             String status = reader.readLine();
-            Trip newTrip = new Trip(vehicle, departurePort, arrivalPort, departureDate, arrivalDate,
+            if (!status.equals("Completed") && !status.equals("InProgress") && !status.equals("Scheduled")) {
+                System.out.println("Invalid status.");
+                return;
+            }
+            Trip newTrip = new Trip(tripId, vehicle, departurePort, arrivalPort, departureDate, arrivalDate,
                     status);
             crud.addTrip(newTrip);
             if (status.equals("Completed")) {
-                if (vehicle.getType().equals("Truck") ) {
+                if (vehicle.getType().equals("Truck")) {
                     Truck truck = (Truck) vehicle;
                     vehicleCRUD.updateVehicle(vehicleId,
                             new Truck(vehicleId, truck.getName(), truck.getCurrentFuel(),
@@ -114,7 +127,7 @@ public class TripCRUDView {
             }
 
             else if (status.equals("InProgress")) {
-                if (vehicle.getType().equals("Truck") ) {
+                if (vehicle.getType().equals("Truck")) {
                     Truck truck = (Truck) vehicle;
                     vehicleCRUD.updateVehicle(vehicleId,
                             new Truck(vehicleId, truck.getName(), truck.getCurrentFuel(),
@@ -129,7 +142,7 @@ public class TripCRUDView {
             }
 
             else if (status.equals("Scheduled")) {
-                if (vehicle.getType().equals("Truck") ) {
+                if (vehicle.getType().equals("Truck")) {
                     Truck truck = (Truck) vehicle;
                     vehicleCRUD.updateVehicle(vehicleId,
                             new Truck(vehicleId, truck.getName(), truck.getCurrentFuel(),
@@ -156,15 +169,24 @@ public class TripCRUDView {
     public static void updateATrip() {
         System.out.println("\033c");
         try {
+            System.out.println("Enter trip Id:");
+            String updateTripId = reader.readLine();
+            Trip tripToUpdate = crud.readTripById(updateTripId);
+            if (tripToUpdate == null) {
+                System.out.println("\033c");
+                System.out.println("Trip not found!");
+                return;
+            }
             System.out.println("Enter Vehicle ID to update:");
             String updateVehicleId = reader.readLine();
+
+            VehicleCRUD vehicleCRUD = new VehicleCRUD();
             Vehicle vehicleToUpdate = vehicleCRUD.readVehicle(updateVehicleId);
             if (vehicleToUpdate == null) {
                 System.out.println("\033c");
                 System.out.println("Vehicle not found!");
                 return;
             }
-
             System.out.println("Enter New Departure Port Name:");
             String newDepPortName = reader.readLine();
             Port newDeparturePort = portCRUD.readPort(newDepPortName);
@@ -181,7 +203,10 @@ public class TripCRUDView {
 
             System.out.println("Enter New Status:");
             String newStatus = reader.readLine();
-
+            if (!newStatus.equals("Completed") && !newStatus.equals("InProgress") && !newStatus.equals("Scheduled")) {
+                System.out.println("Invalid status.");
+                return;
+            }
             // Check the type of vehicle based on the VehicleID prefix and create the
             // appropriate instance
             Vehicle updatedVehicle;
@@ -202,9 +227,10 @@ public class TripCRUDView {
                 return;
             }
 
-            Trip updatedTrip = new Trip(updatedVehicle, newDeparturePort, newArrivalPort, newDepartureDate,
+            Trip updatedTrip = new Trip(updateTripId, updatedVehicle, newDeparturePort, newArrivalPort,
+                    newDepartureDate,
                     newArrivalDate, newStatus);
-            crud.updateTrip(updateVehicleId, updatedTrip);
+            crud.updateTrip(updateTripId, updatedTrip);
             System.out.println("\033c");
             System.out.println("Trip updated successfully!");
 
@@ -217,10 +243,15 @@ public class TripCRUDView {
     public static void deleteATrip() {
         System.out.println("\033c");
         try {
-            System.out.println("Enter Vehicle ID to delete:");
-            String deleteVehicleId = reader.readLine();
-
-            crud.deleteTrip(deleteVehicleId);
+            System.out.println("Enter trip ID to delete:");
+            String deleteTripId = reader.readLine();
+            Trip trip = crud.readTripById(deleteTripId);
+            if (trip == null) {
+                System.out.println("\033c");
+                System.out.println("The trip is not exist.");
+                return;
+            }
+            crud.deleteTrip(deleteTripId);
             System.out.println("Trip deleted successfully!");
         } catch (Exception e) {
             // TODO: handle exception
@@ -275,33 +306,55 @@ public class TripCRUDView {
                 int choice = Integer.parseInt(reader.readLine());
                 switch (choice) {
                     case 1:
+                        System.out.println("╔════════════════════════════╗");
+                        System.out.println("║          All Trip          ║");
+                        System.out.println("╚════════════════════════════╝");
                         displayAllTrip();
                         break;
                     case 2:
+                        System.out.println("╔════════════════════════════╗");
+                        System.out.println("║          Add Trip          ║");
+                        System.out.println("╚════════════════════════════╝");
                         addATrip();
                         break;
 
                     case 3:
+                        System.out.println("╔════════════════════════════╗");
+                        System.out.println("║         Update Trip        ║");
+                        System.out.println("╚════════════════════════════╝");
                         updateATrip();
                         break;
                     case 4:
+                        System.out.println("╔════════════════════════════╗");
+                        System.out.println("║         Delete Trip        ║");
+                        System.out.println("╚════════════════════════════╝");
                         deleteATrip();
                         break;
                     case 5:
+                        System.out.println("╔════════════════════════════╗");
+                        System.out.println("║         Daily Fuel         ║");
+                        System.out.println("╚════════════════════════════╝");
                         calculateDailyFuel();
                         break;
                     case 6:
+                        System.out.println("╔════════════════════════════╗");
+                        System.out.println("║          List Trip         ║");
+                        System.out.println("╚════════════════════════════╝");
                         crud.listTripsOnGivenDay();
                         break;
 
                     case 7:
+                        System.out.println("╔════════════════════════════╗");
+                        System.out.println("║     List Trip In Period    ║");
+                        System.out.println("╚════════════════════════════╝");
                         crud.listTripsFromDayAToDayB();
                         break;
                     case 8:
-                    System.out.println("Going back...");
-                    System.out.print("\033c");
+                        System.out.println("Going back...");
+                        System.out.print("\033c");
                         return;
                     default:
+                        System.out.println("\033c");
                         System.out.println("Invalid choice. Please try again.");
                 }
             } catch (Exception e) {
