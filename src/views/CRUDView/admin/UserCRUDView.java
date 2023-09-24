@@ -110,6 +110,8 @@ public class UserCRUDView {
                 return;
             }
             crud.deleteUser(deletedUsername);
+            System.out.println("\033c");
+            System.out.println("Delete successful!");
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
