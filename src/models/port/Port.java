@@ -1,12 +1,31 @@
-package portManagement;
+package models.port;
 
+import models.vehicle.Vehicle;
 import java.util.ArrayList;
 import java.util.List;
+import models.container.Container;
+import models.trip.Trip;
 
 public class Port {
     private String id;
     private String name;
-    private double latitude;
+    public double getLatitude() {
+		return latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public double getStoringCapacity() {
+		return storingCapacity;
+	}
+
+	public boolean getLandingAbility() {
+		return landingAbility;
+	}
+
+	private double latitude;
     private double longitude;
     private double storingCapacity;
     private boolean landingAbility;
@@ -24,7 +43,10 @@ public class Port {
         this.landingAbility = landingAbility;
     }
 
-    // Calculate distance to another port using the Haversine formula
+    public Port() {
+	}
+
+	// Calculate distance to another port using the Haversine formula
     public double calculateDistanceTo(Port otherPort) {
         final int R = 6371; // Radius of the Earth in kilometers
         double latDistance = Math.toRadians(otherPort.latitude - this.latitude);
@@ -50,7 +72,7 @@ public class Port {
 
     // Add a container to the port
     public void addContainer(Container container) {
-        if (getTotalWeight() + container.weight <= storingCapacity) {
+        if (getTotalWeight() + container.getWeight() <= storingCapacity) {
             containersList.add(container);
         } else {
             System.out.println("Port capacity exceeded!");
@@ -66,7 +88,7 @@ public class Port {
     public double getTotalWeight() {
         double totalWeight = 0;
         for (Container c : containersList) {
-            totalWeight += c.weight;
+            totalWeight += c.getWeight();
         }
         return totalWeight;
     }
