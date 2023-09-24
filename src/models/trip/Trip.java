@@ -6,12 +6,14 @@ import models.port.Port;
 import models.vehicle.Vehicle;
 
 public class Trip {
+     private String tripId;
     protected Vehicle vehicle; // Might be accessed by subclasses for specific vehicle-related operations
     protected Port departurePort; // Important for calculating distances, costs, etc.
     protected Port arrivalPort; // Same reason as departurePort
     protected Date departureDate; // Could be used for scheduling or logging purposes in subclasses
     protected Date arrivalDate; // Same reason as departureDate
     private String status; // Status might not need direct modification in subclasses
+   
 
     public void setVehicle(Vehicle vehicle) {
         this.vehicle = vehicle;
@@ -54,7 +56,8 @@ public class Trip {
     }
 
     // Constructor
-    public Trip(Vehicle vehicle, Port departurePort, Port arrivalPort, Date departureDate, Date arrivalDate, String status) {
+    public Trip(String tripId, Vehicle vehicle, Port departurePort, Port arrivalPort, Date departureDate, Date arrivalDate, String status) {
+        this.tripId = tripId;
         this.vehicle = vehicle;
         this.departurePort = departurePort;
         this.arrivalPort = arrivalPort;
@@ -70,5 +73,9 @@ public class Trip {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getTripId() {
+        return tripId;
     }
 }

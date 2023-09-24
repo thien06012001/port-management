@@ -39,6 +39,7 @@ public class PortCRUD {
                 Port port = new Port(id, name, latitude, longitude, storingCapacity, landingAbility);
                 ports.add(port);
             }
+
             scanner.close();
         } catch (FileNotFoundException e) {
             System.err.println("File not found: " + e.getMessage());
@@ -72,6 +73,7 @@ public class PortCRUD {
             writeAllPorts(Ports);
         }
     }
+
     public void deletePort(String id) {
         List<Port> ports = readAllPorts();
         ports.removeIf(port -> port.getId().equals(id));
@@ -99,6 +101,7 @@ public class PortCRUD {
             }
         }
         return null;
+
     }
 
 }

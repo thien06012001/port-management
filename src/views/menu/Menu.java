@@ -58,12 +58,6 @@ public class Menu {
         }
 
     }
-
-    public double getFuelConsumptionADay(Date date) {
-        return 0; // Đợi TripCRUD
-    }
-
-    
 }
     
 

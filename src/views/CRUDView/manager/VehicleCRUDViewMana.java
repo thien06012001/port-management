@@ -1,4 +1,4 @@
-package views.CRUDView;
+package views.CRUDView.manager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,9 +7,11 @@ import java.util.List;
 
 import CRUD.ContainerCRUD;
 import CRUD.PortCRUD;
+import CRUD.UserCRUD;
 import CRUD.VehicleCRUD;
 import models.container.Container;
 import models.port.Port;
+import models.user.User;
 import models.vehicle.Ship;
 import models.vehicle.Truck;
 import models.vehicle.Vehicle;
@@ -18,6 +20,8 @@ public class VehicleCRUDViewMana {
     static VehicleCRUD crud = new VehicleCRUD();
     static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     static PortCRUD portCRUD = new PortCRUD();
+    private static UserCRUD userCRUD = new UserCRUD();
+    private static User currentUser = userCRUD.readAuthenticatedUser();
 
     public static void displayAllVehicle() {
         System.out.println("\033c");
@@ -98,16 +102,24 @@ public class VehicleCRUDViewMana {
     }
 
     public static void updateAVehicle() {
+        System.out.println("\033c");
         try {
+            System.out.println("\033c");
             System.out.println("Enter Vehicle ID to update:");
             String updateId = reader.readLine();
-            // Check if the entered vehicleId exists in the Vehicle.txt file
             Vehicle existingVehicle = crud.readVehicle(updateId);
             if (existingVehicle == null) {
+                System.out.println("\033c");
                 System.out.println(
                         "Error: No vehicle with the entered ID exists. Please enter a valid ID.");
                 return;
             }
+            if (!existingVehicle.getCurrentPortId().equals(currentUser.getAssociatedPort())) {
+                System.out.println("\033c");
+                System.out.println("Vehicle does not exist in this port.");
+                return;
+            }
+            // Check if the entered vehicleId exists in the Vehicle.txt file
 
             System.out.println("Enter new Vehicle Name:");
             String updateName = reader.readLine();
@@ -127,14 +139,19 @@ public class VehicleCRUDViewMana {
                         new Truck(updateId, updateName, updateFuelCapacity,
                                 updateCarryingCapacity, updateCurrentFuel, updateTruckType,
                                 existingVehicle.getCurrentPortId()));
+                System.out.println("\033c");
+                System.out.println("Update successfully!");
             } else if ("Ship".equalsIgnoreCase(updateType)) {
                 crud.updateVehicle(updateId,
                         new Ship(updateId, updateName, updateFuelCapacity,
                                 updateCarryingCapacity, updateCurrentFuel, existingVehicle.getCurrentPortId()));
+                System.out.println("\033c");
+                System.out.println("Update successfully!");
             } else {
                 System.out.println("Invalid vehicle type!");
             }
         } catch (NumberFormatException e) {
+            System.out.println("\033c");
             System.out.println(
                     "Please enter a valid number for fuel capacity, carrying capacity, or current fuel.");
         } catch (Exception e) {
@@ -143,6 +160,7 @@ public class VehicleCRUDViewMana {
     }
 
     public static void deleteAVehicle() {
+        System.out.println("\033c");
         System.out.println("Enter Vehicle ID to delete:");
         String deleteId;
         try {
@@ -156,13 +174,22 @@ public class VehicleCRUDViewMana {
     }
 
     public static void loadContainer() {
+        System.out.println("\033c");
+        boolean canLoad = true;
         try {
             System.out.println("Assign a container to a truck");
             System.out.println("Enter Vehicle ID:");
             String vehicleId = reader.readLine();
             Vehicle currentVehicle = crud.readVehicle(vehicleId);
             if (currentVehicle == null) {
-                System.out.println("The vehicle does not exist.");
+                System.out.println("\033c");
+                System.out.println(
+                        "Error: No vehicle with the entered ID exists. Please enter a valid ID.");
+                return;
+            }
+            if (!currentVehicle.getCurrentPortId().equals(currentUser.getAssociatedPort())) {
+                System.out.println("\033c");
+                System.out.println("Vehicle does not exist in this port.");
                 return;
             }
             System.out.println("Enter Container ID:");
@@ -170,21 +197,24 @@ public class VehicleCRUDViewMana {
             ContainerCRUD containerCRUD = new ContainerCRUD();
             Container currentContainer = containerCRUD.readContainerById(containerId);
             if (currentContainer == null) {
+                System.out.println("\033c");
                 System.out.println("The container does not exist.");
                 return;
             }
             if (currentContainer.getStatus() == "Loaded") {
+                System.out.println("\033c");
                 System.out.println("The container is already loaded.");
                 return;
             }
             if (!currentContainer.getLocationId().equals(currentVehicle.getCurrentPortId())) {
+                System.out.println("\033c");
                 System.out.println("The container and the vehicle are not on the same port.");
                 return;
             }
             if (vehicleId.startsWith("tr-")) {
                 Truck truck = (Truck) currentVehicle;
                 String truckType = truck.getTruckType();
-                boolean canLoad = false;
+
                 switch (truckType) {
                     case "Basic":
                         if (currentContainer.getType().equals("DryStorage")
@@ -192,6 +222,7 @@ public class VehicleCRUDViewMana {
                                 || currentContainer.getType().equals("OpenSide")) {
                             canLoad = true;
                         } else {
+                            System.out.println("\033c");
                             System.out.println(
                                     "Basic truck can't carry this container type: "
                                             + currentContainer.getType());
@@ -202,6 +233,7 @@ public class VehicleCRUDViewMana {
                         if (currentContainer.getType().equals("Refrigerated")) {
                             canLoad = true;
                         } else {
+                            System.out.println("\033c");
                             System.out.println(
                                     "Reefer truck can't carry this container type: "
                                             + currentContainer.getType());
@@ -212,6 +244,7 @@ public class VehicleCRUDViewMana {
                         if (currentContainer.getType().equals("Liquid")) {
                             canLoad = true;
                         } else {
+                            System.out.println("\033c");
                             System.out.println(
                                     "Tanker truck can't carry this container type: "
                                             + currentContainer.getType());
@@ -219,30 +252,33 @@ public class VehicleCRUDViewMana {
                         break;
 
                     default:
+                        System.out.println("\033c");
                         System.out.println("Unknown truck type: " + truckType);
                         break;
                 }
 
-                if (canLoad) {
-                    // getContainersList().add(container);
-                    double totalWeightInVehicle = 0.0;
-                    List<Container> containersList = containerCRUD.readAllContainers();
-                    for (Container container : containersList) {
-                        if (container.getLocationId().equals(currentVehicle.getId())) {
-                            totalWeightInVehicle += container.getWeight();
-                        }
+            }
+            if (canLoad) {
+                // getContainersList().add(container);
+                double totalWeightInVehicle = 0.0;
+                List<Container> containersList = containerCRUD.readAllContainers();
+                for (Container container : containersList) {
+                    if (container.getLocationId().equals(currentVehicle.getId())) {
+                        totalWeightInVehicle += container.getWeight();
                     }
-                    if (currentContainer.getWeight() + totalWeightInVehicle <= currentVehicle
-                            .getCarryingCapacity()) {
+                }
+                if (currentContainer.getWeight() + totalWeightInVehicle <= currentVehicle
+                        .getCarryingCapacity()) {
 
-                        containerCRUD.updateContainer(containerId,
-                                new Container(containerId, currentContainer.getWeight(),
-                                        currentContainer.getType(), "Loaded", vehicleId));
-                    } else {
-                        System.out.println("Too much weight to load this container!");
-                        System.out.println(currentVehicle.getCarryingCapacity());
-                        return;
-                    }
+                    containerCRUD.updateContainer(containerId,
+                            new Container(containerId, currentContainer.getWeight(),
+                                    currentContainer.getType(), "Loaded", vehicleId));
+                    System.out.println("\033c");
+                    System.out.println("The container is loaded!");
+                } else {
+                    System.out.println("\033c");
+                    System.out.println("Too much weight to load this container!");
+                    return;
                 }
             }
         } catch (Exception e) {
@@ -252,13 +288,21 @@ public class VehicleCRUDViewMana {
     }
 
     public static void unloadContainer() {
+        System.out.println("\033c");
         try {
             System.out.println("Unload container from vehicle");
             System.out.println("Enter Vehicle ID:");
             String unloadVehicleId = reader.readLine();
             Vehicle currentUnloadVehicle = crud.readVehicle(unloadVehicleId);
             if (currentUnloadVehicle == null) {
-                System.out.println("The vehicle does not exist.");
+                System.out.println("\033c");
+                System.out.println(
+                        "Error: No vehicle with the entered ID exists. Please enter a valid ID.");
+                return;
+            }
+            if (!currentUnloadVehicle.getCurrentPortId().equals(currentUser.getAssociatedPort())) {
+                System.out.println("\033c");
+                System.out.println("Vehicle does not exist in this port.");
                 return;
             }
             System.out.println("Enter Container ID:");
@@ -266,14 +310,17 @@ public class VehicleCRUDViewMana {
             ContainerCRUD unloadContainerCRUD = new ContainerCRUD();
             Container currentUnloadContainer = unloadContainerCRUD.readContainerById(unloadContainerId);
             if (currentUnloadContainer == null) {
+                System.out.println("\033c");
                 System.out.println("The container does not exist.");
                 return;
             }
             if (currentUnloadContainer.getStatus() == "Loaded") {
+                System.out.println("\033c");
                 System.out.println("The container is already loaded.");
                 return;
             }
             if (!currentUnloadContainer.getLocationId().equals(currentUnloadVehicle.getId())) {
+                System.out.println("\033c");
                 System.out.println("The container are not on the vehicle.");
                 return;
             }
@@ -290,6 +337,7 @@ public class VehicleCRUDViewMana {
             }
             if (currentUnloadContainer.getWeight() + totalWeightInPort <= currentUnloadPort
                     .getStoringCapacity()) {
+                System.out.println("\033c");
                 System.out.println("Unload successfully.");
                 System.out.println(currentUnloadPort
                         .getStoringCapacity());
@@ -308,29 +356,42 @@ public class VehicleCRUDViewMana {
     }
 
     public static void refuelContainer() {
+        System.out.println("\033c");
         try {
             System.out.println("Refuel Vehicle");
             System.out.println("Enter Vehicle ID:");
             String refuelVehicleId = reader.readLine();
             Vehicle currentRefuelVehicle = crud.readVehicle(refuelVehicleId);
-            System.out.println(currentRefuelVehicle.getId());
-            VehicleCRUD currentRefuelVehicleCRUD = new VehicleCRUD();
             if (currentRefuelVehicle == null) {
-                System.out.println("The vehicle does not exist.");
+                System.out.println("\033c");
+                System.out.println(
+                        "Error: No vehicle with the entered ID exists. Please enter a valid ID.");
                 return;
             }
+            if (!currentRefuelVehicle.getCurrentPortId().equals(currentUser.getAssociatedPort())) {
+                System.out.println("\033c");
+                System.out.println("Vehicle does not exist in this port.");
+                return;
+            }
+            System.out.println(currentRefuelVehicle.getId());
+            VehicleCRUD currentRefuelVehicleCRUD = new VehicleCRUD();
+
             if (refuelVehicleId.startsWith("tr-")) {
                 Truck newTruck = (Truck) currentRefuelVehicle;
                 currentRefuelVehicleCRUD.updateVehicle(refuelVehicleId,
                         new Truck(newTruck.getId(), newTruck.getName(), newTruck.getFuelCapacity(),
                                 newTruck.getCarryingCapacity(), newTruck.getFuelCapacity(),
                                 newTruck.getTruckType(), newTruck.getCurrentPortId()));
+                System.out.println("\033c");
+                System.out.println("Refuel successfully");
             } else if (refuelVehicleId.startsWith("sh-")) {
                 Ship newShip = (Ship) currentRefuelVehicle;
                 currentRefuelVehicleCRUD.updateVehicle(refuelVehicleId,
                         new Ship(newShip.getId(), newShip.getName(), newShip.getFuelCapacity(),
                                 newShip.getCarryingCapacity(), newShip.getFuelCapacity(),
                                 newShip.getCurrentPortId()));
+                System.out.println("\033c");
+                System.out.println("Refuel successfully");
             }
 
         } catch (Exception e) {
@@ -340,14 +401,21 @@ public class VehicleCRUDViewMana {
     }
 
     public static void moveToPort() {
+        System.out.println("\033c");
         try {
             System.out.println("Check if a vehicle can move to a port");
             System.out.println("Enter Vehicle ID:");
             String checkVehicleId = reader.readLine();
             Vehicle existingVehicle = crud.readVehicle(checkVehicleId);
             if (existingVehicle == null) {
+                System.out.println("\033c");
                 System.out.println(
-                        "There is no vehicle with this ID in the system");
+                        "Error: No vehicle with the entered ID exists. Please enter a valid ID.");
+                return;
+            }
+            if (!existingVehicle.getCurrentPortId().equals(currentUser.getAssociatedPort())) {
+                System.out.println("\033c");
+                System.out.println("Vehicle does not exist in this port.");
                 return;
             }
             System.out.println("Enter Port ID:");

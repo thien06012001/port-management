@@ -8,6 +8,7 @@ import java.util.Scanner;
 import models.user.Admin;
 import models.user.PortManager;
 import models.user.User;
+import models.vehicle.Vehicle;
 import views.menu.Login;
 
 public class UserCRUD {
@@ -29,7 +30,7 @@ public class UserCRUD {
                 }
 
                 String[] parts = line.split(", ");
-                if (parts.length != 4) {
+                if (parts.length != 5) {
                     System.err.println("Invalid line: " + line);
                     continue;
                 }
@@ -38,7 +39,8 @@ public class UserCRUD {
                 String password = parts[1];
                 String role = parts[2];
                 String associatedPort = parts[3];
-                User user = new PortManager(username, password, role, associatedPort);
+                Boolean isAuthenticated = Boolean.parseBoolean(parts[4]);
+                User user = new PortManager(username, password, role, associatedPort,isAuthenticated);
                 users.add(user);
             }
 
@@ -52,7 +54,7 @@ public class UserCRUD {
     public void addPortManger(PortManager portManager) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
             bw.write("\n" + portManager.getUsername() + ", " + portManager.getPassword() + ", " + portManager.getRole() +", "
-                    + portManager.getAssociatedPort());
+                    + portManager.getAssociatedPort() + ", " + portManager.getIsAuthenticated());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -61,12 +63,30 @@ public class UserCRUD {
     public void addAdmin(Admin admin) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
             bw.write("\n" + admin.getUsername() + ", " + admin.getPassword() + ", " + admin.getRole() +", "
-                    + admin.getAssociatedPort());
+                    + admin.getAssociatedPort() + ", " + admin.getIsAuthenticated());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+     public User readUser(String username) {
+        List<User> users = readAllUsers();
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                return user;
+            }
+        }
+        return null; 
+    }
 
+     public User readAuthenticatedUser() {
+        List<User> users = readAllUsers();
+        for (User user : users) {
+            if (user.getIsAuthenticated()) {
+                return user;
+            }
+        }
+        return null; // Return null if no vehicle with the given ID is found
+    }
     public void updateUsers(String username, User updatedUser) {
         List<User> users = readAllUsers();
         int index = -1;
@@ -93,7 +113,7 @@ public class UserCRUD {
             bw.write("# Container File\n# Format: Username, Password, Role, associatedPort");
             for (User user : users) {
                 bw.write("\n" + user.getUsername() + ", " + user.getPassword() + ", " + user.getRole()+", "
-                        + user.getAssociatedPort());
+                        + user.getAssociatedPort() + ", " + user.getIsAuthenticated());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -131,7 +151,7 @@ public class UserCRUD {
                         String password = reader.readLine();
                         System.out.println("Enter The Associated Port:");
                         String associatedPort = reader.readLine();
-                        crud.addPortManger(new PortManager(username, password, "PortManager", associatedPort));
+                        crud.addPortManger(new PortManager(username, password, "PortManager", associatedPort,false));
                         break;
                     case 3:
                         System.out.println("Enter Username to update:");
@@ -145,7 +165,7 @@ public class UserCRUD {
                         System.out.println("Enter new Associated Port:");
                         String updatedAssociatedPort = reader.readLine();
                         crud.updateUsers(selectedUsername,
-                                new PortManager(updatedUsername, updatePassword, updatedRole, updatedAssociatedPort));
+                                new PortManager(updatedUsername, updatePassword, updatedRole, updatedAssociatedPort,false));
                         break;
                     case 4:
                         System.out.println("Enter Username to delete:");

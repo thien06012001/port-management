@@ -1,4 +1,4 @@
-package views.CRUDView;
+package views.CRUDView.admin;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -103,6 +103,8 @@ public class PortCRUDView {
         Boolean updatedLandingAbility = Boolean.parseBoolean(reader.readLine());
         crud.updatePort(updateId, new Port(updateId, updatedName, updatedLatitude, updatedLongitude,
                 updatedStoringCapacity, updatedLandingAbility));
+        System.out.println("\033c");
+        System.out.println("Update Port successfully");
     }
 
     public static void deleteAPort() throws IOException {
@@ -139,18 +141,33 @@ public class PortCRUDView {
                 int choice = Integer.parseInt(reader.readLine());
                 switch (choice) {
                     case 1:
+                        System.out.println("╔════════════════════════════╗");
+                        System.out.println("║          All Port          ║");
+                        System.out.println("╚════════════════════════════╝");
                         displayAllPorts();
                         break;
                     case 2:
+                        System.out.println("╔════════════════════════════╗");
+                        System.out.println("║         Ship In Port       ║");
+                        System.out.println("╚════════════════════════════╝");
                         ListAllShipsInPort();
                         break;
                     case 3:
+                        System.out.println("╔════════════════════════════╗");
+                        System.out.println("║           Add Port         ║");
+                        System.out.println("╚════════════════════════════╝");
                         addAPort();
                         break;
                     case 4:
+                        System.out.println("╔════════════════════════════╗");
+                        System.out.println("║         Update Port        ║");
+                        System.out.println("╚════════════════════════════╝");
                         updateAPort();
                         break;
                     case 5:
+                        System.out.println("╔════════════════════════════╗");
+                        System.out.println("║         Delete Port        ║");
+                        System.out.println("╚════════════════════════════╝");
                         deleteAPort();
                         break;
                     case 6:
