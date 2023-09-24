@@ -76,6 +76,7 @@ public class VehicleCRUDView {
             if (currentPort == null) {
                 System.out.println(
                         "Error: The entered currentPortID does not match any port in the system.");
+                return;
             }
             if ("Truck".equalsIgnoreCase(type)) {
                 System.out.println("Enter Truck Type (e.g., Basic, Reefer, Tanker):");
