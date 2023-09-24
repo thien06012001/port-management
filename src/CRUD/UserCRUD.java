@@ -110,7 +110,7 @@ public class UserCRUD {
 
     private void writeAllUsers(List<User> users) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH))) {
-            bw.write("# Container File\n# Format: Username, Password, Role, associatedPort");
+            bw.write("# Container File\n# Format: Username, Password, Role, associatedPort, isAuthenticated");
             for (User user : users) {
                 bw.write("\n" + user.getUsername() + ", " + user.getPassword() + ", " + user.getRole()+", "
                         + user.getAssociatedPort() + ", " + user.getIsAuthenticated());

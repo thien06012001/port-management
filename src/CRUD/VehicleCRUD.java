@@ -128,7 +128,7 @@ public class VehicleCRUD {
 
     private void writeAllVehicles(List<Vehicle> vehicles) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH))) {
-            bw.write("# Vehicle File\n# Format: ID, Name, Type, Fuel Capacity, Carrying Capacity, Current Fuel");
+            bw.write("# Vehicle File\n# Format: ID, Name, Type, Fuel Capacity, Carrying Capacity, Current Fuel, [Truck type], associatedPort");
             for (Vehicle vehicle : vehicles) {
                 if (vehicle instanceof Truck) {
                     Truck truck = (Truck) vehicle;

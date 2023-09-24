@@ -1,5 +1,5 @@
 # Container File
-# Format: ContainerID, Weight, Type
+# Format: ContainerID, Weight, Type, Status, LocationId
 c-001, 5.0, DryStorage, Loaded, sh-001
 c-002, 6.0, OpenTop, OnWait, p-00003
 c-003, 4.0, OpenSide, Loaded, sh-002

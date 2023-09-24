@@ -1,5 +1,5 @@
 # Container File
-# Format: Username, Password, Role, associatedPort
+# Format: Username, Password, Role, associatedPort, isAuthenticated
 portadmin, 123456, Admin, null, false
 portmana1, manager1, PortManager, p-00001, false
 portmana2, manager2, PortManager, p-00002, false

@@ -1,5 +1,5 @@
 # Vehicle File
-# Format: ID, Name, Type, Fuel Capacity, Carrying Capacity, Current Fuel
+# Format: ID, Name, Type, Fuel Capacity, Carrying Capacity, Current Fuel, [Truck type], associatedPort
 tr-001, BigTruck1, Truck, 1.0E8, 200.0, 1.0E7, Basic, p-00002
 tr-002, BigTruck2, Truck, 1000000.0, 2100.0, 1000000.0, Reefer, none
 tr-003, BigTruck3, Truck, 40000.0, 1040000.0, 2050.0, Tanker, p-00003

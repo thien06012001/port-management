@@ -82,7 +82,7 @@ public class ContainerCRUD {
 
     private void writeAllContainers(List<Container> containers) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH))) {
-            bw.write("# Container File\n# Format: ContainerID, Weight, Type");
+            bw.write("# Container File\n# Format: ContainerID, Weight, Type, Status, LocationId");
             for (Container container : containers) {
                 bw.write("\n" + container.getId() + ", " + container.getWeight() + ", " + container.getType() + ", " + container.getStatus() + ", " + container.getLocationId());
             }
