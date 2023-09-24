@@ -3,9 +3,7 @@ package models.vehicle;
 
 import interfaces.IVehicle;
 
-import java.util.List;
 import java.util.ArrayList;
-import models.*;
 import models.container.Container;
 import models.port.Port;
 
