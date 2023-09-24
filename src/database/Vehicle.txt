@@ -1,16 +1,16 @@
 # Vehicle File
 # Format: ID, Name, Type, Fuel Capacity, Carrying Capacity, Current Fuel
-tr-001, BigTruck1, Truck, 1000000.0, 2000.0, 1000000.0, Basic, p-00001
+tr-001, BigTruckss1, Truck, 200.0, 500000.0, 500000.0, Tanker, none
 tr-002, BigTruck2, Truck, 1000000.0, 2100.0, 1000000.0, Reefer, none
-tr-003, BigTruck3, Truck, 1040000.0, 2050.0, 840000.0, Tanker, p-00003
+tr-003, BigTruck3, Truck, 840000.0, 1040000.0, 2050.0, Tanker, none
 tr-004, BigTruck4, Truck, 1060000.0, 2020.0, 860000.0, Basic, p-00004
 tr-005, BigTruck5, Truck, 1080000.0, 203000.0, 880000.0, Basic, p-00005
 tr-006, BigTruck6, Truck, 1020000.0, 2040.0, 820000.0, Tanker, p-00004
 tr-007, BigTruck7, Truck, 1010000.0, 2015.0, 801000.0, Basic, p-00005
 tr-008, BigTruck8, Truck, 1030000.0, 2005.0, 830000.0, Reefer, p-00004
 tr-009, BigTruck9, Truck, 1050000.0, 2025.0, 850000.0, Tanker, p-00005
-tr-010, BigTruck10, Truck, 888000.0, 5550.0, 444040.0, Reefer, p-00001
-sh-001, BigShip1, Ship, 1800000.0, 10000.0, 843778.6491500196, p-00001
+tr-010, BigTruck10, Truck, 888000.0, 5550.0, 444040.0, Reefer, p-00002
+sh-001, BigShip1, Ship, 843778.6491500196, 1800000.0, 10000.0, none
 sh-002, BigShip2, Ship, 1900000.0, 10500.0, 1020000.0, p-00003
 sh-003, BigShip3, Ship, 1840000.0, 10200.0, 1010000.0, none
 sh-004, BigShip4, Ship, 1860000.0, 10300.0, 1004000.0, p-00004

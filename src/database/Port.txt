@@ -1,14 +1,13 @@
 # Port File
-# Format: ID, Name, Latitude, Longitude, Storing Capacity, Landing Ability
-
-# Ports
+# Format: PortID, PortName, PortLatitude, PortLongitude, PortStoringCapacity, PortLandingAbility 
 p-00001, Shanghai Port, 31.2354, 121.4781, 1000000.0, true
 p-00002, Rotterdam Port, 51.9225, 4.47917, 800000.0, true
 p-00003, Valencia Port, 39.4698, -0.3755, 600000.0, false
-p-00004, Busan Port, 35.1796, 129.0750, 750000.0, true
-p-00005, Jebel Ali Port, 25.0250, 55.0489, 900000.0, true
+p-00004, Busan Port, 35.1796, 129.075, 750000.0, true
+p-00005, Jebel Ali Port, 25.025, 55.0489, 900000.0, true
 p-00006, Los Angeles Port, 33.7392, -118.2611, 800000.0, false
 p-00007, Singapore Port, 1.2655, 103.8208, 360000.0, true
 p-00008, Hamburg Port, 53.5438, 9.9856, 1450000.0, true
 p-00009, New Jersey Port, 40.6895, -74.1745, 478300.0, false
 p-00010, Sydney Port, -33.8699, 151.2093, 2615000.0, true
+p-00012, Ha Noi Port, 142.0, 124.0, 134251.0, false

@@ -62,7 +62,7 @@ public class UserCRUDView {
                     case 5:
                         System.out.println("Going back...");
                         System.out.print("\033c");
-                        views.menu.AdminMenu.displayAdminMenu(); // Call the displayLogin method from the Login class
+                        // views.menu.AdminMenu.displayAdminMenu();
                         return;
                     default:
                         System.out.println("Invalid choice. Please try again.");

@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 import models.user.Admin;
 import models.user.PortManager;
+import views.welcomePageView.WelcomePageView;
 
 public class Login {
 
@@ -59,20 +60,26 @@ public class Login {
 
     public void promptLogin() {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter username:");
+        System.out.println("╔════════════════════════════╗");
+        System.out.println("║         LOGIN PAGE         ║");
+        System.out.println("╚════════════════════════════╝");
+
+        System.out.print("Enter username: ");
         String username = scanner.nextLine();
-        System.out.print("Enter password:");
+        System.out.print("Enter password: ");
         String password = scanner.nextLine();
 
         UserCredentials user = users.get(username);
         if (user != null && user.getPassword().equals(password)) {
-            System.out.println("Logged in as " + user.getRole());
+            System.out.println("\033c");
+            // System.out.println("Logged in as " + user.getRole());
+            System.out.println("Logged in successfully!");
 
             if (user.getAssociatedPort() != null) {
                 if ("Admin".equals(user.getRole())) {
-                    System.out.println("");
+                    System.out.println("Welcome back. You can can access and process all the information as an Admin");
                     views.menu.AdminMenu.displayAdminMenu();
-                    
+
                 } else {
                     System.out.println("Associated Port: " + user.getAssociatedPort());
                     views.menu.ManagerMenu.displayManagerMenu();
@@ -110,24 +117,24 @@ public class Login {
         }
     }
 
-   
-    public static void displayLogin() {
+    public static boolean displayLogin() {
         Login login = new Login();
         Scanner scanner = new Scanner(System.in);
+        boolean continueLogin = true; // Add a flag to control the loop
 
-        while (true) {
-            System.out.println("\nLogin Test:");
-            System.out.println("Enter 'exit' to quit the test.");
-
+        while (continueLogin) {
             login.promptLogin();
-
             System.out.print("Enter 'exit' to quit or any other key to continue: ");
-            String decision = scanner.nextLine();
-
+            String decision = scanner.nextLine().trim();
             if ("exit".equalsIgnoreCase(decision)) {
-                break;
+                WelcomePageView welcomePageView = new WelcomePageView();
+                welcomePageView.displayWelcomePage(); // Return to the welcome page
+                continueLogin = false; // Set the flag to exit the loop
+
             }
+            System.out.println("\033c");
         }
+        return continueLogin;
     }
 
     // Testing

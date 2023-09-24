@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import views.menu.Login;
 
 public class WelcomePageView {
-   
+
     public void displayWelcomePage() {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -27,7 +27,11 @@ public class WelcomePageView {
                 int choice = Integer.parseInt(reader.readLine());
                 switch (choice) {
                     case 1:
-                        Login.displayLogin();
+                        System.out.print("\033c");
+                        // Login.displayLogin();
+                        if (!Login.displayLogin()) {
+                            return; // Exit the program if displayLogin returns false
+                        }
                         break;
                     case 2:
                         System.out.println("Exiting...");

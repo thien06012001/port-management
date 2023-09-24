@@ -32,7 +32,7 @@ public class ManagerMenu extends Menu{
                         controller.Statistics.viewStats();
                         break;
                     case 5:
-                        views.menu.Login.displayLogin(); // Call the displayLogin method from the Login class
+                        System.out.println("\033c");
                         return;
                     default:
                         System.out.println("Invalid choice. Please try again.");

@@ -39,7 +39,6 @@ public class PortCRUD {
                 Port port = new Port(id, name, latitude, longitude, storingCapacity, landingAbility);
                 ports.add(port);
             }
-
             scanner.close();
         } catch (FileNotFoundException e) {
             System.err.println("File not found: " + e.getMessage());
@@ -49,8 +48,11 @@ public class PortCRUD {
 
     public void addPort(Port port) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
-            bw.write("\n" + port.getId() + ", " + port.getName() + ", " + port.getLatitude() + port.getLongitude()
-                    + port.getStoringCapacity() + port.getLandingAbility());
+            
+            bw.write(
+                    "\n" + port.getId() + ", " + port.getName() + ", " + port.getLatitude() + ", " + port.getLongitude()
+                            + ", " + port.getStoringCapacity() + ", " + port.getLandingAbility());
+          
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,7 +72,6 @@ public class PortCRUD {
             writeAllPorts(Ports);
         }
     }
-
     public void deletePort(String id) {
         List<Port> ports = readAllPorts();
         ports.removeIf(port -> port.getId().equals(id));
@@ -82,8 +83,8 @@ public class PortCRUD {
             bw.write(
                     "# Port File\n# Format: PortID, PortName, PortLatitude, PortLongitude, PortStoringCapacity, PortLandingAbility ");
             for (Port port : Ports) {
-                bw.write("\n" + port.getId() + ", " + port.getName() + ", " + port.getLatitude() + port.getLongitude()
-                        + port.getStoringCapacity() + port.getLandingAbility());
+                bw.write("\n" + port.getId() + ", " + port.getName() + ", " + port.getLatitude()+ ", " + port.getLongitude()
+                        + ", " + port.getStoringCapacity() + ", " + port.getLandingAbility());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -91,15 +92,13 @@ public class PortCRUD {
     }
 
     public Port readPort(String portId) {
-    List<Port> ports = readAllPorts();
-    for (Port port : ports) {
-        if (port.getId().equals(portId)) {
-            return port;
+        List<Port> ports = readAllPorts();
+        for (Port port : ports) {
+            if (port.getId().equals(portId)) {
+                return port;
+            }
         }
-    }
-    return null;
+        return null;
     }
 
-
-   
 }

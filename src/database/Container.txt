@@ -30,4 +30,4 @@ c-027, 8.0, OpenTop, Loaded, tr-004
 c-028, 8.0, OpenSide, OnWait, p-00001
 c-029, 10.0, Refrigerated, OnWait, p-00007
 c-030, 9.0, Liquid, Loaded, tr-009
-c-031, 12.0, Liquid, OnWait, p-00005
+c-031, 17.0, OpenSide, OnWait, p-00001

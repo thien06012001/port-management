@@ -9,7 +9,7 @@ public class ManagerController {
     }
 
     public static void manageVehicleRestricted() {
- 
-
+        VehicleCRUDViewMana vehicleCRUDViewMana = new VehicleCRUDViewMana();
+        vehicleCRUDViewMana.displayVehicleCRUDMana();
     }
 }
