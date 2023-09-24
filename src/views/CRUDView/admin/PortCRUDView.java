@@ -19,7 +19,7 @@ public class PortCRUDView {
         System.out.println("Here are all the available ports: ");
         List<Port> ports = crud.readAllPorts();
         for (Port port : ports) {
-            System.out.println("Container ID: " + port.getId());
+            System.out.println("Port ID: " + port.getId());
             System.out.println("Name: " + port.getName());
             System.out.println("Latitude: " + port.getLatitude());
             System.out.println("Longitude: " + port.getLongitude());

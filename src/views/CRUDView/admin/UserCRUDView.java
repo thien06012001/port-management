@@ -66,16 +66,14 @@ public class UserCRUDView {
         try {
             System.out.println("Enter Username to update:");
             String selectedUsername = reader.readLine();
-            System.out.println("Enter new Username:");
-            String updatedUsername = reader.readLine();
-            List<User> users = crud.readAllUsers();
-            for (User user : users) {
-                if (!user.getUsername().equals(updatedUsername)) {
-                    System.out.println("\033c");
-                    System.out.println("User not found.");
-                    return;
-                }
+            User existingUser = crud.readUser(selectedUsername);
+            if (existingUser == null) {
+                System.out.println("\033c");
+                System.out.println("User not found.");
+                return;
             }
+            System.out.println("Enter new Username:");
+            String updatedUsername = reader.readLine();           
             System.out.println("Enter A Password:");
             String updatePassword = reader.readLine();
             System.out.println("Enter The Associated Port:");
@@ -105,13 +103,11 @@ public class UserCRUDView {
         try {
             System.out.println("Enter Username to delete:");
             String deletedUsername = reader.readLine();
-             List<User> users = crud.readAllUsers();
-            for (User user : users) {
-                if (user.getUsername().equals(deletedUsername)) {
-                    System.out.println("\033c");
-                    System.out.println("User already existed.");
-                    return;
-                }
+             User user = crud.readUser(deletedUsername);
+            if(user == null) {
+                System.out.println("\033c");
+                System.out.println("User does not exist");
+                return;
             }
             crud.deleteUser(deletedUsername);
         } catch (Exception e) {
